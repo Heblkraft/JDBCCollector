@@ -12,6 +12,8 @@
 			- (required) rest.get = <ParameterKey: ParameterValue;...> 	defined use method get
 			- 			 rest.post = <ParameterKey: ParameterValue;...>	defined use method post
 			- 			 rest.authentification = ?
+			- rest.api.key = <API Key>
+			- rest.api.event = <Event>
 			- poll.interval = <Milliseconds>
 			- (required) query = <Query> 
 			- max.entries = <Int>	//Max Entries per poll
