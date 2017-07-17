@@ -36,7 +36,7 @@ public class DBConnector {
 		    jdbcstring = "jdbc:sqlserver://192.168.216.11:1433;DatabaseName=jdbc_test;user=jdbc_user;password=123;"; // TESTSTRING
 		    conn = DriverManager.getConnection(jdbcstring);
 		   	statement = conn.createStatement();
-		   	resultset = statement.executeQuery("SELECT * FROM testTable");
+		   	resultset = statement.executeQuery("SELECT * FROM kebabs");
 		   	restConnector.action(resultset);
 		   	
 		   	System.out.println("Connected I to database");
