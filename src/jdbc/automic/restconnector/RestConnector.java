@@ -8,6 +8,8 @@ import java.net.URISyntaxException;
 
 import org.apache.http.client.ClientProtocolException;
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 
 import jdbc.automic.restconnector.RestCaller.Method;
 
@@ -21,11 +23,13 @@ public class RestConnector implements IRestAction{
 			restCaller.execute();
 			
 			BufferedReader br = new BufferedReader(new InputStreamReader(restCaller.getResponse()));
-			
+			String allStrings = "";
 			String s;
 			while((s = br.readLine())!= null) {
-				System.out.println(s);
+				allStrings += s;
 			}
+			JSONObject jsonObj = (JSONObject) JSONValue.parse(allStrings);
+			System.out.println(jsonObj.get("args").toString());
 			
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
