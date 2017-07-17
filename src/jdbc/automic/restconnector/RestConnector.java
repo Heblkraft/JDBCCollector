@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import org.apache.http.client.ClientProtocolException;
 import org.json.simple.JSONArray;
@@ -46,7 +48,14 @@ public class RestConnector implements IRestAction{
 	}
 
 	@Override
-	public void action(JSONArray array) {
-		System.out.println("action");
+	public void action(ResultSet array) {
+		try {
+			JSONArray arr = IRestAction.fetchData(array);
+			
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }

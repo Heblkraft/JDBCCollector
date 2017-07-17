@@ -10,7 +10,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 public interface IRestAction {
-	public void action(JSONArray array);
+	public void action(ResultSet array);
 	
 	@SuppressWarnings("unchecked")
 	public static JSONArray fetchData(ResultSet set) throws SQLException {
