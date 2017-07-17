@@ -1,7 +1,11 @@
 /bin/*
 <<<<<<< HEAD
+<<<<<<< HEAD
 .settings
 .project
 =======
 /bin/
 >>>>>>> refs/remotes/origin/master
+=======
+/bin/
+>>>>>>> 837607db05928a88dcc448eca3d7f0aa3cb84f6a
