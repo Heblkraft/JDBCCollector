@@ -1,13 +1,14 @@
 package jdbc.automic.main;
 
-import jdbc.automic.configuration.DummyConfiguration;
-import jdbc.automic.dbconnector.DummyConnector;
-import jdbc.automic.restconnector.DummyRestConnector;
+import jdbc.automic.configuration.ConfigLoader;
+import jdbc.automic.dbconnector.DBConnector;
+import jdbc.automic.restconnector.RestConnector;
 
 public class MainClass {
+
 	public static void main(String[] args) {
-		new DummyConfiguration();
-		new DummyConnector();
-		new DummyRestConnector();
+		new ConfigLoader("");
+		RestConnector restConnector = new RestConnector();
+		new DBConnector(restConnector);
 	}
 }

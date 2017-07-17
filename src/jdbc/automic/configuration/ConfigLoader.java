@@ -11,11 +11,11 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class DummyConfiguration {
+public class ConfigLoader {
 	
 	private Path configFile;
 	
-	public DummyConfiguration(String configFile) {
+	public ConfigLoader(String configFile) {
 		this.configFile = Paths.get(configFile);
 	}
 	
