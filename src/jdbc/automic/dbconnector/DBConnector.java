@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import jdbc.automic.restconnector.IRestAction;
 import jdbc.automic.restconnector.RestConnector;
 
 
@@ -36,8 +37,10 @@ public class DBConnector {
 		    jdbcstring = "jdbc:sqlserver://192.168.216.11:1433;DatabaseName=jdbc_test;user=jdbc_user;password=123;"; // TESTSTRING
 		    conn = DriverManager.getConnection(jdbcstring);
 		   	statement = conn.createStatement();
-		   	resultset = statement.executeQuery("SELECT * FROM testTable");
-		   	restConnector.action(resultset);
+		   	resultset = statement.executeQuery("SELECT * FROM kebabs");
+		   	
+		   	
+		   	restConnector.action(IRestAction.fetchData(resultset));
 		   	
 		   	System.out.println("Connected I to database");
 	    	return conn;

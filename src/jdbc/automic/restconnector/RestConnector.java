@@ -48,14 +48,7 @@ public class RestConnector implements IRestAction{
 	}
 
 	@Override
-	public void action(ResultSet array) {
-		try {
-			JSONArray arr = IRestAction.fetchData(array);
-			
-			
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	public void action(JSONArray array) {
+		
 	}
 }

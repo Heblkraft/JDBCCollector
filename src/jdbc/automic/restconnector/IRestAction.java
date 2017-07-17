@@ -1,16 +1,13 @@
 package jdbc.automic.restconnector;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 public interface IRestAction {
-	public void action(ResultSet array);
+	public void action(JSONArray array);
 	
 	@SuppressWarnings("unchecked")
 	public static JSONArray fetchData(ResultSet set) throws SQLException {
