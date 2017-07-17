@@ -20,17 +20,15 @@ public class ConfigLoader {
     private Path dbConfigFile;
     private Path restConfigFile;
 
-    private Path configFile;
-
     public ConfigLoader(String dbConfigFile, String restConfigFile) {
         this.dbConfigFile = Paths.get(dbConfigFile);
         this.restConfigFile = Paths.get(restConfigFile);
     }
 
-    private List<String> readConfigFile() {
+    private List<String> readConfigFile(Path path) {
         List<String> configLines = null;
 
-        try (Stream<String> stream = Files.lines(dbConfigFile)) {
+        try (Stream<String> stream = Files.lines(path)) {
             configLines = stream
                     .filter(line -> !line.isEmpty())
                     .collect(Collectors.toList());
@@ -43,26 +41,29 @@ public class ConfigLoader {
     }
 
     public void load() {
-        //readConfigFile();
 
+        parseConfigFile(dbConfigFile);
+        parseConfigFile(restConfigFile);
 
-        parseConfigFile();
     }
 
-    // fuer die db connection entweder 1 attribute oder alle anderen attributes einzeln.
+    private HashMap<String, String> mergeConfigs(HashMap<String, String> dbConfig, HashMap<String, String> restConfig){
 
-    private HashMap<String, String> parseConfigFile() {
+
+        return null;
+    }
+
+    private HashMap<String, String> parseConfigFile(Path path) {
 
         HashMap<String, String> config = new HashMap<String, String>();
 
-        for (String line : readConfigFile()) {
-
+        for (String line : readConfigFile(path)) {
             String[] pairs = line.split("=");
 
             String key = pairs[0].trim();
             String value = pairs[1].trim();
 
-            System.out.println(Arrays.toString(value.split(";")));
+            // System.out.println(Arrays.toString(value.split(";")));
 
             config.put(key, value);
         }
@@ -76,7 +77,7 @@ public class ConfigLoader {
 
     public static void main(String[] args) {
 
-        // Test runf
+        // Test run
 
 
         File dbconnection_config = new File("./dbconnection.properties");
