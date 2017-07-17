@@ -103,7 +103,6 @@ public class DBConnector {
 	private Connection conn = null;
     private Statement statement = null;
     private ResultSet resultset = null;
-	private String jdbcstring;
 	
 	private RestConnector restConnector;
 
@@ -121,37 +120,18 @@ public class DBConnector {
 	
 	public Connection getConnection() throws SQLException {
 		try {
-			
-		    jdbcstring = "jdbc:sqlserver://192.168.216.25:1433;DatabaseName=jdbc_test;user=jdbc_user;password=123;"; // TESTSTRING
-		    conn = DriverManager.getConnection(jdbcstring);
-		   	statement = conn.createStatement();
-		   	resultset = statement.executeQuery("SELECT * FROM test_table_id");
-		   	
-		   	
-		   	restConnector.action(IRestAction.fetchData(resultset));
-		   	
-		   	System.out.println("Connected I to database");
-	    	return conn;
-		    
-		   
+			if(conn == null) {
+			    String jdbcstring = "jdbc:sqlserver://192.168.216.25:1433;DatabaseName=jdbc_test;user=jdbc_user;password=123;"; // TESTSTRING
+		    	return conn = DriverManager.getConnection(jdbcstring);
+	    	} else {
+	    		return conn;
+	    	}
 		}catch (Exception e) {
 			throw e;
 		}finally {
 			close();
 		}
 	}
-	
-	private void writeResultSet(ResultSet resultSet) throws SQLException {
-        // ResultSet is initially before the first data set
-        while (resultSet.next()) {
-            
-            String ID = resultSet.getString("ID");
-            String name = resultSet.getString("name");
-           
-            System.out.println("User: " + ID);
-            System.out.println("name: " + name);
-        }
-    }
 	
 	private void close() {
         try {
@@ -169,8 +149,13 @@ public class DBConnector {
         } catch (Exception e) {
 
         }
+<<<<<<< HEAD
     }
 
 	
 }
 >>>>>>> refs/remotes/origin/master
+=======
+	}
+}
+>>>>>>> origin/master

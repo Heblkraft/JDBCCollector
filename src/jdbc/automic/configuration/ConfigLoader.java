@@ -63,7 +63,7 @@ public class ConfigLoader {
             String key = pairs[0].trim();
             String value = pairs[1].trim();
 
-            // System.out.println(Arrays.toString(value.split(";")));
+            // System.out.println(fArrays.toString(value.split(";")));
 
             config.put(key, value);
         }
