@@ -7,7 +7,7 @@ import jdbc.automic.restconnector.RestConnector;
 public class MainClass {
 	public static void main(String[] args) {
 		new Configuration();
+		RestConnector restConnector = new RestConnector();
 		new DBConnector();
-		new RestConnector();
 	}
 }

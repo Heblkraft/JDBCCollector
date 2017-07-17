@@ -20,6 +20,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -105,6 +106,13 @@ public class RestCaller {
 			httpRequestBase.setURI(new URIBuilder(httpRequestBase.getURI()).addParameters(nameValueList).build());
 		}else if(httpRequestBase instanceof HttpPost) {
 			((HttpPost)httpRequestBase).setEntity(new UrlEncodedFormEntity(nameValueList));
+		}
+	}
+	
+	//Sets Body for Post HttpRequest
+	public void setBody(String s) throws UnsupportedEncodingException {
+		if(httpRequestBase instanceof HttpPost) {
+			((HttpPost)httpRequestBase).setEntity(new ByteArrayEntity(s.getBytes()));
 		}
 	}
 	
