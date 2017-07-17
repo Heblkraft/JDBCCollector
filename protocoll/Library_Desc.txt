@@ -1,0 +1,3 @@
+JSON.simple - https://code.google.com/archive/p/json-simple/
+Apache HttpComponents - https://hc.apache.org/
+Microsoft JDBC Driver - https://docs.microsoft.com/en-us/sql/connect/jdbc/microsoft-jdbc-driver-for-sql-server
