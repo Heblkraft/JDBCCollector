@@ -1,7 +1,7 @@
 package jdbc.automic.configuration;
 
-public class DummyConfiguration {
-	public DummyConfiguration() {
+public class Configuration {
+	public Configuration() {
 		System.out.println("Configuration");
 	}
 }

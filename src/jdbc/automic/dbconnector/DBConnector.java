@@ -1,7 +1,7 @@
 package jdbc.automic.dbconnector;
 
-public class DummyConnector {
-	public DummyConnector() {
+public class DBConnector {
+	public DBConnector() {
 		System.out.println("DB Connector");
 	}
 }

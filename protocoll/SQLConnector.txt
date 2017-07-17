@@ -1,0 +1,37 @@
+- Package: jdbc.automic.<PackageName>
+- Config
+	- PackageName: Configuration
+	- Class: ConnectorConfig
+		- connector.config
+		- Attribute Zeile
+		- Key = Value
+			- (required) dbconnection = <ConnectionString> 
+			- dbconnection.user = <ConnectionUser>
+			- dbconnection.password = <ConnectionPassword>
+			- (required) rest.url = <Server URL>
+			- (required) rest.get = <ParameterKey: ParameterValue;...> 	defined use method get
+			- 			 rest.post = <ParameterKey: ParameterValue;...>	defined use method post
+			- 			 rest.authentification = ?
+			- poll.interval = <Milliseconds>
+			- (required) query = <Query> 
+			- max.entries = <Int>	//Max Entries per poll
+			- (required) increment.id = <String> //column name of id
+			- increment.startvalue = <Int> //If not defined current id
+			-+ increment.timestamp = <Timestamp>
+- Database Connector
+	- PackageName: DBConnector
+	- Interface: IRestAction
+	- Parameter: JSONArray
+	
+	
+	
+	- Execute Interface every poll.interval ms
+	
+- REST API
+	- PackageName: RestConnector
+	- Gives Instance of IRestAction to DbConnector
+	- Sends HttpRequest if IRestAction gets called to URL
+		- Adding Header 
+		- Adding GET, POST Parameter
+		- Adding Authentification
+	- Handles JSONArray
