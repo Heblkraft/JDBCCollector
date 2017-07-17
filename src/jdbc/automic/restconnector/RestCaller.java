@@ -20,6 +20,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -40,6 +41,7 @@ public class RestCaller {
 	private String url;
 	private List<NameValuePair> nameValueList;
 	private List<Header> headerList;
+	private String body;
 	private CredentialsProvider credentialsProvider;
 	
 	public RestCaller(String url, Method method) {
@@ -104,8 +106,16 @@ public class RestCaller {
 		if(httpRequestBase instanceof HttpGet) {
 			httpRequestBase.setURI(new URIBuilder(httpRequestBase.getURI()).addParameters(nameValueList).build());
 		}else if(httpRequestBase instanceof HttpPost) {
-			((HttpPost)httpRequestBase).setEntity(new UrlEncodedFormEntity(nameValueList));
+			if(body == null)
+				((HttpPost)httpRequestBase).setEntity(new UrlEncodedFormEntity(nameValueList));
+			else
+				((HttpPost)httpRequestBase).setEntity(new ByteArrayEntity(body.getBytes()));
 		}
+	}
+	
+	//Sets Body for Post HttpRequest
+	public void setBody(String s) throws UnsupportedEncodingException {
+		this.body = s;
 	}
 	
 	//Executes the HttpRequest

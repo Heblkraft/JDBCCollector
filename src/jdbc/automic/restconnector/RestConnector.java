@@ -5,20 +5,23 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import org.apache.http.client.ClientProtocolException;
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
 
 import jdbc.automic.restconnector.RestCaller.Method;
 
 public class RestConnector implements IRestAction{
-	
-	RestCaller restCaller = new RestCaller("https://postman-echo.com/get?test=123&hi=456", Method.GET);
+	RestCaller restCaller = new RestCaller("https://postman-echo.com/post", Method.POST);
 	
 	public RestConnector() {
 		try {
+			restCaller.addHeader("Authorization", "73f62553-bec9-46e9-b89c-9ab14cd18277");
+			restCaller.addHeader("Content-Type", "application/json");
+			restCaller.addHeader("Accept", "application/json");
+			restCaller.setBody("{\"body\":\"hi\"}");
 			restCaller.build();
 			restCaller.execute();
 			
@@ -28,9 +31,7 @@ public class RestConnector implements IRestAction{
 			while((s = br.readLine())!= null) {
 				allStrings += s;
 			}
-			JSONObject jsonObj = (JSONObject) JSONValue.parse(allStrings);
-			System.out.println(jsonObj.get("args").toString());
-			
+			System.out.println(allStrings);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		} catch (URISyntaxException e) {
@@ -40,7 +41,6 @@ public class RestConnector implements IRestAction{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
 	}
 
 	public IRestAction getRestAction() {
@@ -48,7 +48,14 @@ public class RestConnector implements IRestAction{
 	}
 
 	@Override
-	public void action(JSONArray array) {
-		
+	public void action(ResultSet array) {
+		try {
+			JSONArray arr = IRestAction.fetchData(array);
+			
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }

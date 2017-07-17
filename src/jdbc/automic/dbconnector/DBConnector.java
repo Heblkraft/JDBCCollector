@@ -7,56 +7,39 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
 
+import jdbc.automic.restconnector.RestConnector;
+
 public class DBConnector {
 
 	private Connection conn = null;
     private Statement statement = null;
     private ResultSet resultset = null;
-	
-    private String host;
-    private String databasename;
-	private String username;
-	private String password;
+	private String jdbcstring;
+	private RestConnector restConnector;
 	
 	
 	
-	
-	public DBConnector() throws SQLException {
+	public DBConnector(RestConnector restConnector) throws SQLException {
 		System.out.println("DB Connector");
-		this.host = host;
-		this.databasename = databasename;
-		this.username = username;
-		this.password = password;
-	
+		
+		
+		this.restConnector = restConnector;
 		getConnection();
 	}
 	
 	public Connection getConnection() throws SQLException {
 		try {
-			host = ("jdbc:sqlserver://localhost:1433");
-			username = "TestConnection";
-	    	password = "123";
-	    	databasename = "TestConnector";
+			
+		    jdbcstring = "jdbc:sqlserver://localhost:1433;DatabaseName=TestConnector;user=TestConnection;password=123;"; // TESTSTRING
+		    conn = DriverManager.getConnection(jdbcstring);
+		   	statement = conn.createStatement();
+		   	resultset = statement.executeQuery("SELECT * FROM testTable");
+		   	restConnector.action(resultset);
+		   	
+		   	System.out.println("Connected I to database");
+	    	return conn;
 		    
-		    if(username == "" && password == "") {
-		    	conn = DriverManager.getConnection("jdbc:sqlserver://localhost:1433;DatabaseName=TestConnector;user=TestConnection;password=123;");
-		    	statement = conn.createStatement();
-		    	resultset = statement.executeQuery("SELECT * FROM testTable");
-		    	writeResultSet(resultset);
-		    
-		    	System.out.println("Connected I to database");
-		    	return conn;
-		    }
-		    
-		    else {
-		    	conn = DriverManager.getConnection(host+";DatabaseName="+databasename,username,password);
-		    	statement = conn.createStatement();
-		    	resultset = statement.executeQuery("SELECT * FROM testTable");
-		    	writeResultSet(resultset);
-		    	
-		    	System.out.println("Connected II to database");
-		    	return conn;
-		    }
+		   
 		}catch (Exception e) {
 			throw e;
 		}finally {
