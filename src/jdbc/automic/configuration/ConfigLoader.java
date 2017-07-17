@@ -76,7 +76,7 @@ public class ConfigLoader {
 
     public static void main(String[] args) {
 
-        // Test run
+        // Test runf
 
 
         File dbconnection_config = new File("./dbconnection.properties");
