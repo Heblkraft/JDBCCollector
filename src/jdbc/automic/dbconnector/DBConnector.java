@@ -5,9 +5,9 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Properties;
 
 import jdbc.automic.restconnector.RestConnector;
+
 
 public class DBConnector {
 
@@ -15,16 +15,19 @@ public class DBConnector {
     private Statement statement = null;
     private ResultSet resultset = null;
 	private String jdbcstring;
+	
 	private RestConnector restConnector;
+
 	
-	
-	
-	public DBConnector(RestConnector restConnector) throws SQLException {
-		System.out.println("DB Connector");
-		
-		
+	public DBConnector(RestConnector restConnector) {
 		this.restConnector = restConnector;
-		getConnection();
+
+		try {
+			System.out.println("DB Connector");
+			getConnection();
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public Connection getConnection() throws SQLException {
