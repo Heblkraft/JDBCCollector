@@ -5,8 +5,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import org.apache.http.client.ClientProtocolException;
 import org.json.simple.JSONArray;
@@ -21,24 +24,15 @@ public class RestConnector implements IRestAction{
 			restCaller.addHeader("Authorization", "73f62553-bec9-46e9-b89c-9ab14cd18277");
 			restCaller.addHeader("Content-Type", "application/json");
 			restCaller.addHeader("Accept", "application/json");
-			restCaller.setBody("{\"body\":\"hi\"}");
 			restCaller.build();
 			restCaller.execute();
-			
-			BufferedReader br = new BufferedReader(new InputStreamReader(restCaller.getResponse()));
-			String allStrings = "";
-			String s;
-			while((s = br.readLine())!= null) {
-				allStrings += s;
-			}
-			System.out.println(allStrings);
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
 	}
@@ -49,6 +43,21 @@ public class RestConnector implements IRestAction{
 
 	@Override
 	public void action(JSONArray array) {
-		
+		try {
+			restCaller.setBody(array.toString());
+			
+			BufferedReader br = new BufferedReader(new InputStreamReader(restCaller.getResponse()));
+			String allStrings = "";
+			String s;
+			while((s = br.readLine())!= null) {
+				allStrings += s;
+			}
+			System.out.println(allStrings);
+			
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

@@ -34,10 +34,10 @@ public class DBConnector {
 	public Connection getConnection() throws SQLException {
 		try {
 			
-		    jdbcstring = "jdbc:sqlserver://192.168.216.11:1433;DatabaseName=jdbc_test;user=jdbc_user;password=123;"; // TESTSTRING
+		    jdbcstring = "jdbc:sqlserver://192.168.216.25:1433;DatabaseName=jdbc_test;user=jdbc_user;password=123;"; // TESTSTRING
 		    conn = DriverManager.getConnection(jdbcstring);
 		   	statement = conn.createStatement();
-		   	resultset = statement.executeQuery("SELECT * FROM kebabs");
+		   	resultset = statement.executeQuery("SELECT * FROM test_table_id");
 		   	
 		   	
 		   	restConnector.action(IRestAction.fetchData(resultset));
