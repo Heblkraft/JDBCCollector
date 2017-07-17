@@ -19,6 +19,7 @@ import jdbc.automic.restconnector.RestCaller.Method;
 public class RestConnector implements IRestAction{
 	RestCaller restCaller = new RestCaller("https://postman-echo.com/post", Method.POST);
 	
+	//Initializes the RestCaller
 	public RestConnector() {
 		try {
 			restCaller.addHeader("Authorization", "73f62553-bec9-46e9-b89c-9ab14cd18277");
@@ -36,22 +37,28 @@ public class RestConnector implements IRestAction{
 			e.printStackTrace();
 		}
 	}
-
+	
+	
+	
+	
 	public IRestAction getRestAction() {
 		return this;
 	}
-
+	
+	
+	//Implementations of the IRestAction witch gets called by DbConnector;
 	@Override
 	public void action(JSONArray array) {
 		try {
 			restCaller.setBody(array.toString());
-			
 			BufferedReader br = new BufferedReader(new InputStreamReader(restCaller.getResponse()));
 			String allStrings = "";
 			String s;
 			while((s = br.readLine())!= null) {
 				allStrings += s;
 			}
+			
+			
 			System.out.println(allStrings);
 			
 		} catch (UnsupportedEncodingException e) {
