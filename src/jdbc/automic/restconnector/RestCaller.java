@@ -41,6 +41,7 @@ public class RestCaller {
 	private String url;
 	private List<NameValuePair> nameValueList;
 	private List<Header> headerList;
+	private String body;
 	private CredentialsProvider credentialsProvider;
 	
 	public RestCaller(String url, Method method) {
@@ -105,15 +106,16 @@ public class RestCaller {
 		if(httpRequestBase instanceof HttpGet) {
 			httpRequestBase.setURI(new URIBuilder(httpRequestBase.getURI()).addParameters(nameValueList).build());
 		}else if(httpRequestBase instanceof HttpPost) {
-			((HttpPost)httpRequestBase).setEntity(new UrlEncodedFormEntity(nameValueList));
+			if(body == null)
+				((HttpPost)httpRequestBase).setEntity(new UrlEncodedFormEntity(nameValueList));
+			else
+				((HttpPost)httpRequestBase).setEntity(new ByteArrayEntity(body.getBytes()));
 		}
 	}
 	
 	//Sets Body for Post HttpRequest
 	public void setBody(String s) throws UnsupportedEncodingException {
-		if(httpRequestBase instanceof HttpPost) {
-			((HttpPost)httpRequestBase).setEntity(new ByteArrayEntity(s.getBytes()));
-		}
+		this.body = s;
 	}
 	
 	//Executes the HttpRequest
