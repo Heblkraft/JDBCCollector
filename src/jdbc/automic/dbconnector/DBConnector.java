@@ -1,5 +1,8 @@
 package jdbc.automic.dbconnector;
 
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.*;
 import java.time.Clock;
 
@@ -12,16 +15,27 @@ public class DBConnector {
     private Statement statement = null;
     private ResultSet resultset = null;
 
-    private int lastID = 3;
+    private int lastID = 0;
     private Timestamp lastTimestamp = null;
 	
 	private RestConnector restConnector;
 	private MainQueryThread mainQueryThread;
+
+	FileOutputStream fos = null;
+	File file;
+	String content;
 	
 	public DBConnector(RestConnector restConnector) {
+		try {
+			lastID = Integer.parseInt(Files.readAllLines(Paths.get(".id")).get(0));
+		}
+		catch(IOException | IndexOutOfBoundsException e) {
+			e.printStackTrace();
+			System.err.println("Can not open file or file is empty.");
+		}
+
 		this.restConnector = restConnector;
 		this.mainQueryThread = new MainQueryThread(this);
-		sendQuery(MainQueryThread.QUERY);
 		this.mainQueryThread.start();
 		System.out.println("DB Connector");
 	}
@@ -43,7 +57,7 @@ public class DBConnector {
 	public ResultSet sendQuery(String query){
 		String query2 = query;
 		try {
-			if(config.get("incremenet.id") != null){
+			if(config.get("increment.id") != null){
 				query = query + " WHERE ID > ?";
                 PreparedStatement ps = getConnection().prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 				ps.setInt(1, lastID);
@@ -66,7 +80,42 @@ public class DBConnector {
 	}
 
 	public void lastIDChanged (int newID) {
+		if(lastID < newID) {
+			try {
+				lastID = newID;
+				content = Integer.toString(lastID);
+				file = new File(".id");
+				fos = new FileOutputStream(file);
 
+				// if file doesnt exists, then create it
+				if (!file.exists()) {
+					file.createNewFile();
+				}
+
+				byte[] contentInBytes = content.getBytes();
+
+				fos.write(contentInBytes);
+				fos.flush();
+				fos.close();
+
+				System.out.println("Done");
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					if (fos != null) {
+						fos.close();
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	public RestConnector getRestConnector(){
+		return this.restConnector;
 	}
 
 	private boolean isEmpty(ResultSet resultSet){
