@@ -4,7 +4,7 @@ import java.sql.*;
 
 import jdbc.automic.restconnector.IRestAction;
 import jdbc.automic.restconnector.RestConnector;
-
+import static jdbc.automic.configuration.ConfigLoader.config;
 
 public class DBConnector {
 	private Connection conn = null;
@@ -16,7 +16,6 @@ public class DBConnector {
 	
 	private RestConnector restConnector;
 	private MainQueryThread mainQueryThread;
-
 	
 	public DBConnector(RestConnector restConnector) {
 		this.restConnector = restConnector;
@@ -40,22 +39,30 @@ public class DBConnector {
 	}
 
 	public ResultSet sendQuery(String query){
+		String query2 = query;
 		try {
-			query = query + " WHERE ID > ?";
-			PreparedStatement ps = getConnection().prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-			ps.setInt(1,lastID);
-			resultset = ps.executeQuery();
+
+			if(config.get("incremenet.id") != null){
+
+				query = query + " WHERE ID > ?";
+				PreparedStatement ps = getConnection().prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+				ps.setInt(1, lastID);
+				resultset = ps.executeQuery();
+			}
+
+			else if (config.get("increment.timestamp") != null){
+				query2 = query2 + " WHERE TIMESTAMP > ?";
+				ps = getConnection().prepareStatement(query2, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+				ps.setTimestamp(1,lastTimestamp);
+				resultset = ps.executeQuery();
+			}
 			IRestAction.fetchData(resultset);
 			ps.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
-
-		//resultset = stmt.executeQuery(query + " WHERE ID = ?");
-
-		//resultset = stmt.executeQuery(query + " WHERE TIMESTAMP = ?");
-		return null;
+		return resultset;
 	}
 
 	private boolean isEmpty(ResultSet resultSet){
