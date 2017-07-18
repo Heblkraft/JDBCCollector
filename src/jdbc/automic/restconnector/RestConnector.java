@@ -28,27 +28,7 @@ public class RestConnector implements IRestAction{
 			restCaller.addHeader("Accept", "application/json");
 			restCaller.build();
 			restCaller.execute();
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
-		String jdbcstring = "jdbc:sqlserver://192.168.216.33:1433;DatabaseName=jdbc_test;user=jdbc_user;password=123;"; // TESTSTRING
-
-		try {
-			Connection connection = DriverManager.getConnection(jdbcstring);
-			Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-			ResultSet rs = statement.executeQuery("select * from test_table_id where id < 1");
-			if(!rs.next()){
-				System.out.println("Rs is empty");
-			}
-			rs.beforeFirst();
-
-		} catch (SQLException e) {
+		} catch (IOException | URISyntaxException e) {
 			e.printStackTrace();
 		}
 	}

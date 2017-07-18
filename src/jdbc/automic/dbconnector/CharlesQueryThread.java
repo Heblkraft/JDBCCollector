@@ -1,10 +1,14 @@
 package jdbc.automic.dbconnector;
 
+import com.sun.org.apache.regexp.internal.RE;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class CharlesQueryThread extends Thread{
 	DBConnector dbConnector;
+	private static final boolean ID = true;
 
 	public CharlesQueryThread(String name, DBConnector dbConnector) {
 		super(name);
@@ -15,7 +19,14 @@ public class CharlesQueryThread extends Thread{
 	public void run() {
 		ResultSet rs = dbConnector.sendQuery(MainQueryThread.QUERY);
 		if(!isEmpty(rs)){
-
+			if(ID){
+				try {
+					rs.last();
+					rs.getInt("id");
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 
