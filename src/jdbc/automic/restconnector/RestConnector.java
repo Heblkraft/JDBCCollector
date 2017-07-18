@@ -33,14 +33,17 @@ public class RestConnector implements IRestAction {
     //Implementations of the IRestAction witch gets called by DbConnector;
     @Override
     public void action(JSONArray array) {
+        System.out.println("Action: "+ array);
         for (Object obj : array) {
-            JSONObject jsonObject = (JSONObject) obj;
             JSONObject jsonSent = new JSONObject();
+            jsonSent.put("values", (JSONObject) obj);
             jsonSent.put("eventname", "buildRequest");
-            restCaller.setBody(jsonObject.toString());
+            restCaller.setBody(jsonSent.toString());
+
             try {
-                restCaller.addParametersToRequest();
+                restCaller.build();
                 restCaller.execute();
+                System.out.println("Rest Executed");
                 BufferedReader reader = new BufferedReader(new InputStreamReader(restCaller.getResponse()));
                 String s = null;
                 while((s = reader.readLine())!= null){
@@ -51,7 +54,7 @@ public class RestConnector implements IRestAction {
             } catch (URISyntaxException e) {
                 e.printStackTrace();
             }
-            System.out.println("RestCaller sent: " + jsonObject);
+            System.out.println("RestCaller sent: " + jsonSent);
         }
     }
 }

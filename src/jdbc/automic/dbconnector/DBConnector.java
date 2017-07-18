@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.time.Clock;
 import java.util.ArrayList;
 
+import com.microsoft.sqlserver.jdbc.SQLServerException;
 import jdbc.automic.restconnector.IRestAction;
 import jdbc.automic.restconnector.RestConnector;
 import static jdbc.automic.configuration.ConfigLoader.config;
@@ -87,7 +88,7 @@ public class DBConnector {
 	    		return conn;
 	    	}
 		}catch (Exception e) {
-			e.printStackTrace();
+			conn = null;
 		}
 		return null;
 	}
@@ -117,7 +118,7 @@ public class DBConnector {
 			System.out.println(": " + IRestAction.fetchData(resultset));
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			conn = null;
 		}
 
 		return resultset;
