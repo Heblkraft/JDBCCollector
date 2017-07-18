@@ -4,7 +4,9 @@ import jdbc.automic.restconnector.RestCaller.Method;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 
 public class RestConnector implements IRestAction {
@@ -33,7 +35,22 @@ public class RestConnector implements IRestAction {
     public void action(JSONArray array) {
         for (Object obj : array) {
             JSONObject jsonObject = (JSONObject) obj;
+            JSONObject jsonSent = new JSONObject();
+            jsonSent.put("eventname", "buildRequest");
             restCaller.setBody(jsonObject.toString());
+            try {
+                restCaller.addParametersToRequest();
+                restCaller.execute();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(restCaller.getResponse()));
+                String s = null;
+                while((s = reader.readLine())!= null){
+                    System.out.println(s);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
             System.out.println("RestCaller sent: " + jsonObject);
         }
     }
