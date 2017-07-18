@@ -4,6 +4,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.time.Clock;
 
 import jdbc.automic.restconnector.IRestAction;
@@ -16,7 +17,7 @@ public class DBConnector {
     private ResultSet resultset = null;
 
     private int lastID = 0;
-    private Timestamp lastTimestamp = null;
+    private Timestamp lastTimestamp;
 	
 	private RestConnector restConnector;
 	private MainQueryThread mainQueryThread;
@@ -27,7 +28,18 @@ public class DBConnector {
 	
 	public DBConnector(RestConnector restConnector) {
 		try {
-			lastID = Integer.parseInt(Files.readAllLines(Paths.get(".id")).get(0));
+            /*---------------Testing---------------------------------------------
+            Timestamp currentTimeStamp = new Timestamp(System.currentTimeMillis());
+            lastTimestamp = Timestamp.valueOf("2013-03-31 13:13:13.131");
+            System.out.println(currentTimeStamp);
+            lastTimestampChanged(currentTimeStamp);*/
+
+            if(config.get("increment.id") != null) {
+                lastID = Integer.parseInt(Files.readAllLines(Paths.get(".id")).get(0));
+            }
+            else if(config.get("increment.timestamp") != null) {
+                lastTimestamp = Timestamp.valueOf(Files.readAllLines(Paths.get(".timestamp")).get(0));
+            }
 		}
 		catch(IOException | IndexOutOfBoundsException e) {
 			e.printStackTrace();
@@ -113,6 +125,42 @@ public class DBConnector {
 			}
 		}
 	}
+
+    public void lastTimestampChanged (Timestamp newTimeStamp) {
+        if(lastTimestamp.before(newTimeStamp)) {
+            try {
+                lastTimestamp = newTimeStamp;
+                content = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS.ms").format(lastTimestamp);
+                file = new File(".timestamp");
+                fos = new FileOutputStream(file);
+
+                // if file doesnt exists, then create it
+                if (!file.exists()) {
+                    file.createNewFile();
+                    System.out.println("File Created");
+                }
+
+                byte[] contentInBytes = content.getBytes();
+
+                fos.write(contentInBytes);
+                fos.flush();
+                fos.close();
+
+                System.out.println("Done");
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (fos != null) {
+                        fos.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
 	public RestConnector getRestConnector(){
 		return this.restConnector;
