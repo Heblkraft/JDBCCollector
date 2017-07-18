@@ -21,6 +21,7 @@ public class DBConnector {
 		this.restConnector = restConnector;
 		this.mainQueryThread = new MainQueryThread(this);
 		sendQuery(MainQueryThread.QUERY);
+		this.mainQueryThread.start();
 		System.out.println("DB Connector");
 	}
 	
