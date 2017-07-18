@@ -3,3 +3,4 @@
 .idea
 JDBC-Connector.iml
 bin/
+.classpath
