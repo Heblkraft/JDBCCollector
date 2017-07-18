@@ -22,23 +22,10 @@ public class CharlesQueryThread extends Thread{
 		ResultSet rs = dbConnector.sendQuery(MainQueryThread.QUERY);
 		if(rs == null) System.out.println(currentThread().getName()+": Resultset == null");
 		try {
-			IRestAction.fetchData(rs);
+			System.out.println(currentThread().getName()+" : "+IRestAction.fetchData(rs));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
-	}
-
-	private boolean isEmpty(ResultSet resultSet){
-		boolean returnvalue = false;
-		try {
-			if(!resultSet.next()){
-                returnvalue= true;
-            }
-            resultSet.beforeFirst();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return returnvalue;
 	}
 }
