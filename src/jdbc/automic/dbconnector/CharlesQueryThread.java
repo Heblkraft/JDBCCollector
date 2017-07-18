@@ -4,6 +4,5 @@ public class CharlesQueryThread extends Thread{
 
 	public CharlesQueryThread(String name) {
 		super(name);
-		
 	}
 }

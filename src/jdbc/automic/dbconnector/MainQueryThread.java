@@ -16,16 +16,15 @@ public class MainQueryThread extends Thread{
 		this.dbconnector = dbconnector;
 		subThreads = Collections.synchronizedList(new ArrayList<>());
 		initThreadPool(10);
+		startThread();
 	}
 
 	@Override
 	public void run() {
 		while(killFlag) {
-			
-			
-			
+
 			try {
-				this.sleep(1000);
+				this.sleep(POLL_TIME);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -34,6 +33,12 @@ public class MainQueryThread extends Thread{
 	
 	private void killThread() {
 		this.killFlag = true;
+	}
+
+	private void startThread(){
+		for(CharlesQueryThread thread : subThreads){
+			System.out.println(thread.getName());
+		}
 	}
 	
 	private void initThreadPool(int number) {
