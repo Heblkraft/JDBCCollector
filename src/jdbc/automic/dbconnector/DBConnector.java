@@ -102,7 +102,7 @@ public class DBConnector {
 		try {
 
 			if(config.get("increment.id") != null){
-				query += " WHERE ID > ?";
+				query += " WHERE "+config.get("increment.id")+" > ?";
 
 				ps = getConnection().prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 				ps.setInt(1, lastID);
@@ -114,9 +114,8 @@ public class DBConnector {
 				ps = getConnection().prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 				ps.setTimestamp(1,lastTimestamp);
 			}
-
 			resultset = ps.executeQuery();
-			System.out.println(": " + IRestAction.fetchData(resultset));
+
 
 		} catch (SQLException e) {
 			conn = null;
@@ -130,7 +129,7 @@ public class DBConnector {
 			try {
 				lastID = newID;
 				String content = Integer.toString(lastID);
-				writeToFile(".id", content);
+				writeToFile(VIA_ID, content);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -143,7 +142,7 @@ public class DBConnector {
 			try {
 				lastTimestamp = newTimeStamp;
 				String content = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS.ms").format(lastTimestamp);
-				writeToFile(".timestamp", content);
+				writeToFile(VIA_TIMESTAMP, content);
 
 			} catch (IOException e) {
 				e.printStackTrace();

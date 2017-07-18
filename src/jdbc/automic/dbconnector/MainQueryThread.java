@@ -19,7 +19,6 @@ class MainQueryThread extends Thread{
 
 	@Override
 	public void run() {
-		System.out.println("MainThread Running");
 		while(!killFlag) {
 			startThread();
 			try {
