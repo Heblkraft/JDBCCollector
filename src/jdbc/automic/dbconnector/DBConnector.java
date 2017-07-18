@@ -41,27 +41,23 @@ public class DBConnector {
 	public ResultSet sendQuery(String query){
 		String query2 = query;
 		try {
-
 			if(config.get("incremenet.id") != null){
-
 				query = query + " WHERE ID > ?";
-				PreparedStatement ps = getConnection().prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+                PreparedStatement ps = getConnection().prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 				ps.setInt(1, lastID);
 				resultset = ps.executeQuery();
+                IRestAction.fetchData(resultset);
 			}
-
 			else if (config.get("increment.timestamp") != null){
 				query2 = query2 + " WHERE TIMESTAMP > ?";
-				ps = getConnection().prepareStatement(query2, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+				PreparedStatement ps = getConnection().prepareStatement(query2, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 				ps.setTimestamp(1,lastTimestamp);
 				resultset = ps.executeQuery();
+                IRestAction.fetchData(resultset);
 			}
-			IRestAction.fetchData(resultset);
-			ps.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
 		return resultset;
 	}
 
