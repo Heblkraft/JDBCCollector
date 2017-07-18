@@ -1,6 +1,7 @@
 package jdbc.automic.dbconnector;
 
 import java.sql.*;
+import java.time.Clock;
 
 import jdbc.automic.restconnector.IRestAction;
 import jdbc.automic.restconnector.RestConnector;
@@ -47,19 +48,25 @@ public class DBConnector {
                 PreparedStatement ps = getConnection().prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 				ps.setInt(1, lastID);
 				resultset = ps.executeQuery();
-                IRestAction.fetchData(resultset);
+
+				System.out.println(" : "+IRestAction.fetchData(resultset));
 			}
 			else if (config.get("increment.timestamp") != null){
 				query2 = query2 + " WHERE TIMESTAMP > ?";
 				PreparedStatement ps = getConnection().prepareStatement(query2, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 				ps.setTimestamp(1,lastTimestamp);
 				resultset = ps.executeQuery();
-                IRestAction.fetchData(resultset);
+
+				System.out.println(" : "+IRestAction.fetchData(resultset));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return resultset;
+	}
+
+	public void lastIDChanged (int newID) {
+
 	}
 
 	private boolean isEmpty(ResultSet resultSet){
