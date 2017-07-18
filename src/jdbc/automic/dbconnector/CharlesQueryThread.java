@@ -1,6 +1,8 @@
 package jdbc.automic.dbconnector;
 
 import com.sun.org.apache.regexp.internal.RE;
+import jdbc.automic.restconnector.IRestAction;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,16 +20,13 @@ public class CharlesQueryThread extends Thread{
 	@Override
 	public void run() {
 		ResultSet rs = dbConnector.sendQuery(MainQueryThread.QUERY);
-		if(!isEmpty(rs)){
-			if(ID){
-				try {
-					rs.last();
-					rs.getInt("id");
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
+		if(rs == null) System.out.println(currentThread().getName()+": Resultset == null");
+		try {
+			IRestAction.fetchData(rs);
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
+
 	}
 
 	private boolean isEmpty(ResultSet resultSet){
