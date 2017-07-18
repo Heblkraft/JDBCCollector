@@ -57,7 +57,7 @@ public class DBConnector {
 	public ResultSet sendQuery(String query){
 		String query2 = query;
 		try {
-			if(config.get("incremenet.id") != null){
+			if(config.get("increment.id") != null){
 				query = query + " WHERE ID > ?";
                 PreparedStatement ps = getConnection().prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 				ps.setInt(1, lastID);
