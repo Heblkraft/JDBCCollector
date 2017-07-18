@@ -11,7 +11,7 @@ public class DBConnector {
     private Statement statement = null;
     private ResultSet resultset = null;
 
-    private int lastID;
+    private int lastID = 3;
     private Timestamp lastTimestamp = null;
 	
 	private RestConnector restConnector;
@@ -21,6 +21,7 @@ public class DBConnector {
 	public DBConnector(RestConnector restConnector) {
 		this.restConnector = restConnector;
 		this.mainQueryThread = new MainQueryThread(this);
+		sendQuery(MainQueryThread.QUERY);
 		System.out.println("DB Connector");
 	}
 	
@@ -34,8 +35,6 @@ public class DBConnector {
 	    	}
 		}catch (Exception e) {
 			e.printStackTrace();
-		}finally {
-			close();
 		}
 		return null;
 	}
