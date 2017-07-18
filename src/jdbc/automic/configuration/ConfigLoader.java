@@ -47,7 +47,7 @@ public class ConfigLoader {
 
     }
 
-    private HashMap<String, String> mergeConfigs(HashMap<String, String> dbConfig, HashMap<String, String> restConfig){
+    private HashMap< String, String> mergeConfigs(HashMap<String, String> dbConfig, HashMap<String, String> restConfig){
 
 
         return null;
