@@ -21,7 +21,7 @@ public interface IRestAction {
 			}
 			array.add(tableEntry);
 		}
-		System.out.println(array);
+		set.beforeFirst();
 		return array;
 	}
 }
