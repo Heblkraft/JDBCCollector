@@ -11,7 +11,6 @@ import jdbc.automic.restconnector.RestConnector;
 
 
 public class DBConnector {
-
 	private Connection conn = null;
     private Statement statement = null;
     private ResultSet resultset = null;
