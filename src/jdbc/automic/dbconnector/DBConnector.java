@@ -42,14 +42,20 @@ public class DBConnector {
 
 	public ResultSet sendQuery(String query){
 		try {
-			PrepareStatement ps = getConnection().prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			query = query + " WHERE ID > ?";
+			PreparedStatement ps = getConnection().prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			ps.setInt(1,lastID);
+			resultset = ps.executeQuery();
+			IRestAction.fetchData(resultset);
+			ps.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
-		resultset = stmt.executeQuery(query + " WHERE ID = ?");
 
-		resultset = stmt.executeQuery(query + " WHERE TIMESTAMP = ?");
+		//resultset = stmt.executeQuery(query + " WHERE ID = ?");
+
+		//resultset = stmt.executeQuery(query + " WHERE TIMESTAMP = ?");
 		return null;
 	}
 	
