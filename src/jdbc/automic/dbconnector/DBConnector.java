@@ -82,6 +82,7 @@ public class DBConnector {
 	public void lastIDChanged (int newID) {
 		if(lastID < newID) {
 			try {
+				lastID = newID;
 				content = Integer.toString(lastID);
 				file = new File(".id");
 				fos = new FileOutputStream(file);
@@ -98,7 +99,6 @@ public class DBConnector {
 				fos.close();
 
 				System.out.println("Done");
-				lastID= newID;
 
 			} catch (IOException e) {
 				e.printStackTrace();
