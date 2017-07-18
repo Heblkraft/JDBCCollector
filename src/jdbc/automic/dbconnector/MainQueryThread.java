@@ -6,6 +6,7 @@ import java.util.List;
 
 public class MainQueryThread extends Thread{
 	private static final int POLL_TIME = 1000;
+	protected static final String QUERY = "select * from test_table_id";
 	
 	private DBConnector dbconnector;
 	private List<CharlesQueryThread> subThreads;
@@ -37,13 +38,15 @@ public class MainQueryThread extends Thread{
 
 	private void startThread(){
 		for(CharlesQueryThread thread : subThreads){
-			System.out.println(thread.getName());
+			if(!thread.isAlive()){
+
+			}
 		}
 	}
 	
 	private void initThreadPool(int number) {
 		for(int i = 0; i<number; i++) {
-			subThreads.add(new CharlesQueryThread("SubThread #"+i));
+			subThreads.add(new CharlesQueryThread("SubThread #"+i, dbconnector));
 		}
 	}
 }

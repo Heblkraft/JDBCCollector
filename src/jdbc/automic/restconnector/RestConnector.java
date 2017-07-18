@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import com.sun.jna.platform.win32.WinBase;
 import org.apache.http.client.ClientProtocolException;
 import org.json.simple.JSONArray;
 
@@ -34,6 +35,20 @@ public class RestConnector implements IRestAction{
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+		String jdbcstring = "jdbc:sqlserver://192.168.216.33:1433;DatabaseName=jdbc_test;user=jdbc_user;password=123;"; // TESTSTRING
+
+		try {
+			Connection connection = DriverManager.getConnection(jdbcstring);
+			Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			ResultSet rs = statement.executeQuery("select * from test_table_id where id < 1");
+			if(!rs.next()){
+				System.out.println("Rs is empty");
+			}
+			rs.beforeFirst();
+
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
