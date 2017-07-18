@@ -98,6 +98,7 @@ public class DBConnector {
 				fos.close();
 
 				System.out.println("Done");
+				lastID= newID;
 
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -113,7 +114,9 @@ public class DBConnector {
 		}
 	}
 
-
+	public RestConnector getRestConnector(){
+		return this.restConnector;
+	}
 
 	private boolean isEmpty(ResultSet resultSet){
 		boolean returnvalue = false;

@@ -5,17 +5,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 
-import com.sun.jna.platform.win32.WinBase;
 import org.apache.http.client.ClientProtocolException;
 import org.json.simple.JSONArray;
 
 import jdbc.automic.restconnector.RestCaller.Method;
+import org.json.simple.JSONObject;
 
 public class RestConnector implements IRestAction{
 	RestCaller restCaller = new RestCaller("https://postman-echo.com/post", Method.POST);
@@ -40,22 +35,14 @@ public class RestConnector implements IRestAction{
 	//Implementations of the IRestAction witch gets called by DbConnector;
 	@Override
 	public void action(JSONArray array) {
-		try {
-			restCaller.setBody(array.toString());
-			BufferedReader br = new BufferedReader(new InputStreamReader(restCaller.getResponse()));
-			String allStrings = "";
-			String s;
-			while((s = br.readLine())!= null) {
-				allStrings += s;
+		for(Object obj : array){
+			JSONObject jsonObject = (JSONObject) obj;
+			try {
+				restCaller.setBody(jsonObject.toString());
+				System.out.println("RestCaller sent: "+jsonObject);
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-			
-			
-			System.out.println(allStrings);
-			
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 }
