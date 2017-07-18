@@ -17,6 +17,7 @@ public class MainClass {
 
 	public static void main(String[] args) {
 
+
 		if(args.length < 2){
 			System.err.println("Only " + args.length + " arguments were given, but 2 are required");
 			System.exit(-1);
@@ -41,8 +42,6 @@ public class MainClass {
 		for(Map.Entry<String, String> entry : config.entrySet()){
 			System.out.println(entry.getKey() + "     " + entry.getValue());
 		}
-
-		ConfigLoader.validateConfiguration();
 
 		RestConnector restConnector = new RestConnector();
 		DBConnector connector = new DBConnector(restConnector);

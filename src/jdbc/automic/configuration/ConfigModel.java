@@ -1,9 +1,9 @@
 package jdbc.automic.configuration;
 
-public interface ConfigModel {
+interface ConfigModel {
 
     String[] requiredFields = {
-        "dbconnection", "query", "incremenet.id"
+        "dbconnection", "query", "incremenet.id|increment.timestamp"
     };
 
     String[] optionalFields = {

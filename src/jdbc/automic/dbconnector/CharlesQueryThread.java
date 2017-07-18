@@ -9,7 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class CharlesQueryThread extends Thread{
-	private DBConnector dbConnector;
+	private final DBConnector dbConnector;
 
 	public CharlesQueryThread(String name, DBConnector dbConnector) {
 		super(name);

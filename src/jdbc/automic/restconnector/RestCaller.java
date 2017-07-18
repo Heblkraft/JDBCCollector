@@ -36,11 +36,11 @@ public class RestCaller {
 	private CloseableHttpClient httpclient;
 	private HttpRequestBase httpRequestBase;
 	private CloseableHttpResponse response;
-	private HttpContext httpcontext = null;
+	private final HttpContext httpcontext = null;
 	
-	private String url;
-	private List<NameValuePair> nameValueList;
-	private List<Header> headerList;
+	private final String url;
+	private final List<NameValuePair> nameValueList;
+	private final List<Header> headerList;
 	private String body;
 	private CredentialsProvider credentialsProvider;
 	
@@ -73,19 +73,19 @@ public class RestCaller {
 	}
 	//End Adding Header to HeaderList
 	
-	//Adding Authentification to CredentialProvider
-	public void setAuthentification(String username, String password) {
-		setAuthentification(new UsernamePasswordCredentials(username, password));
+	//Adding Authentication to CredentialProvider
+	public void setAuthentication(String username, String password) {
+		setAuthentication(new UsernamePasswordCredentials(username, password));
 	}
 	
-	public void setAuthentification(Credentials credentials) {
+	public void setAuthentication(Credentials credentials) {
 		this.credentialsProvider = new BasicCredentialsProvider();
 		this.credentialsProvider.setCredentials(AuthScope.ANY, credentials);
 	}
 	//End Adding Authentification to CredentialProvider
 	
 	//Adding Attributes to nameValueList
-	public void appendAttributes(String key, String value) throws UnsupportedEncodingException, URISyntaxException {
+	public void appendAttributes(String key, String value) {
 		appendAttributes(new BasicNameValuePair(key, value));
 	}
 	
@@ -93,8 +93,8 @@ public class RestCaller {
 		nameValueList.add(nvp);
 	}
 	//End Adding Attributes to nameValueList
-	
-	
+
+
 	//if Authentification or header or Parameters changed you need to rebuild the client
 	public void build() throws UnsupportedEncodingException, URISyntaxException {
 		//Adding Credentials to HttpClient & Adding Headers to HttpClient
@@ -118,12 +118,12 @@ public class RestCaller {
 	}
 	
 	//Sets Body for Post HttpRequest
-	public void setBody(String s) throws UnsupportedEncodingException {
+	public void setBody(String s) {
 		this.body = s;
 	}
 	
 	//Executes the HttpRequest
-	public void execute() throws ClientProtocolException, IOException {
+	public void execute() throws IOException {
 		if(httpcontext != null) response = httpclient.execute(httpRequestBase,httpcontext);
 		else response = httpclient.execute(httpRequestBase);
 	}

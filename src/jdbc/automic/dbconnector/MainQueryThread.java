@@ -5,9 +5,9 @@ import java.util.Collections;
 import java.util.List;
 import static jdbc.automic.configuration.ConfigLoader.config;
 
-public class MainQueryThread extends Thread{
-	private DBConnector dbconnector;
-	private List<CharlesQueryThread> subThreads;
+class MainQueryThread extends Thread{
+	private final DBConnector dbconnector;
+	private final List<CharlesQueryThread> subThreads;
 	private boolean killFlag = false;
 	
 	public MainQueryThread(DBConnector dbconnector) {

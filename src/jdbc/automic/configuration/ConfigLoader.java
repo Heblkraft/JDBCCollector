@@ -1,7 +1,5 @@
 package jdbc.automic.configuration;
 
-import org.omg.PortableServer.REQUEST_PROCESSING_POLICY_ID;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -12,16 +10,42 @@ import java.util.stream.Stream;
 
 public class ConfigLoader implements ConfigModel {
 
-    public static HashMap<String, String> config = new HashMap<String, String>();
+    public static final HashMap<String, String> config = new HashMap<>();
+
+    // better name than dbConfigFile du fgt
 
     public static void load(String dbConfigFile, String restConfigFile){
-        if(validateConfiguration()) {
+        if(true) {
             config.putAll(parseConfigFile(Paths.get(dbConfigFile)));
             config.putAll(parseConfigFile(Paths.get(restConfigFile)));
             System.err.println("Configuration successfully loaded.");
         }else{
             System.err.println("Configuration could not be loaded because of some unresolved errors. ");
         }
+
+
+
+    }
+
+
+    private static boolean validateConfiguration(){
+
+        List<String> missingKeys = new ArrayList<>();
+
+        for(String requiredKey : requiredFields){
+            if(config.get(requiredKey) == null){
+                missingKeys.add(requiredKey);
+                // add that splitting kurac here
+            }
+        }
+
+        if(!missingKeys.isEmpty()){
+            for(String missingKey : missingKeys){
+                System.err.println("Attribute " + missingKey.toUpperCase() + " is required but not set.");
+            }
+            return false;
+        }
+        return true;
     }
 
     private static List<String> readConfigFile(Path path) {
@@ -39,28 +63,9 @@ public class ConfigLoader implements ConfigModel {
         return configLines;
     }
 
-    public static boolean validateConfiguration(){
-
-        List<String> missingKeys = new ArrayList<String>();
-
-        for(String requiredKey : requiredFields){
-            if(config.get(requiredKey) == null){
-                missingKeys.add(requiredKey);
-            }
-        }
-
-        if(!missingKeys.isEmpty()){
-            for(String missingKey : missingKeys){
-                System.err.println("Attribute " + missingKey.toUpperCase() + " is required but not set.");
-            }
-            return false;
-        }
-        return true;
-    }
-
     private static HashMap<String, String> parseConfigFile(Path path) {
 
-        HashMap<String, String> config = new HashMap<String, String>();
+        HashMap<String, String> config = new HashMap<>();
 
         for (String line : readConfigFile(path)) {
             String[] pairs = line.split("=", 2);

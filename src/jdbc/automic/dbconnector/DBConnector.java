@@ -6,26 +6,27 @@ import java.nio.file.Paths;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.time.Clock;
+import java.util.ArrayList;
 
 import jdbc.automic.restconnector.IRestAction;
 import jdbc.automic.restconnector.RestConnector;
 import static jdbc.automic.configuration.ConfigLoader.config;
 
 public class DBConnector {
-	private Connection conn = null;
-    private Statement statement = null;
-    private ResultSet resultset = null;
+	private Connection conn;
 
     private int lastID = 0;
     private Timestamp lastTimestamp;
-	
-	private RestConnector restConnector;
-	private MainQueryThread mainQueryThread;
 
-	FileOutputStream fos = null;
-	File file;
-	String content;
-	
+	private static final String VIA_ID = ".id";
+	private static final String VIA_TIMESTAMP = ".timestamp";
+
+	private static final int ID_START_VALUE = 0;
+	private static final String TIMESTAMP_START_VALUE = "2013-03-31 13:13:13.131";
+
+	private final RestConnector restConnector;
+
+
 	public DBConnector(RestConnector restConnector) {
 		try {
             /*---------------Testing---------------------------------------------
@@ -34,29 +35,54 @@ public class DBConnector {
             System.out.println(currentTimeStamp);
             lastTimestampChanged(currentTimeStamp);*/
 
+            initTempFiles();
+
             if(config.get("increment.id") != null) {
-                lastID = Integer.parseInt(Files.readAllLines(Paths.get(".id")).get(0));
+                lastID = Integer.parseInt(Files.readAllLines(Paths.get(VIA_ID)).get(0));
             }
             else if(config.get("increment.timestamp") != null) {
                 lastTimestamp = Timestamp.valueOf(Files.readAllLines(Paths.get(".timestamp")).get(0));
             }
 		}
 		catch(IOException | IndexOutOfBoundsException e) {
-			e.printStackTrace();
 			System.err.println("Can not open file or file is empty.");
 		}
 
 		this.restConnector = restConnector;
-		this.mainQueryThread = new MainQueryThread(this);
-		this.mainQueryThread.start();
+
+		new MainQueryThread(this).start();
+
 		System.out.println("DB Connector");
 	}
-	
-	public Connection getConnection() {
+
+	private void initTempFiles(){
+		File idFile = new File(VIA_ID);
+		File timestampFile = new File(VIA_TIMESTAMP);
+
+		try {
+
+			if(!idFile.exists() && idFile.createNewFile()){
+				System.out.println(VIA_ID + " successfully created.");
+			}
+
+			if(!timestampFile.exists() && timestampFile.createNewFile()){
+				System.out.println(VIA_TIMESTAMP + " successfully created.");
+			}
+
+			Files.write(Paths.get(VIA_ID), Integer.toString(ID_START_VALUE).getBytes());
+			Files.write(Paths.get(VIA_TIMESTAMP), TIMESTAMP_START_VALUE.getBytes());
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+
+	}
+
+	private Connection getConnection() {
 		try {
 			if(conn == null) {
-			    String jdbcstring = "jdbc:sqlserver://192.168.216.33:1433;DatabaseName=jdbc_test;user=jdbc_user;password=123;"; // TESTSTRING
-		    	return conn = DriverManager.getConnection(jdbcstring);
+		    	return conn = DriverManager.getConnection(config.get("dbconnection"));
 	    	} else {
 	    		return conn;
 	    	}
@@ -67,27 +93,33 @@ public class DBConnector {
 	}
 
 	public ResultSet sendQuery(String query){
-		String query2 = query;
+
+		ResultSet resultset = null;
+		PreparedStatement ps = null;
+
 		try {
+
 			if(config.get("increment.id") != null){
-				query = query + " WHERE ID > ?";
-                PreparedStatement ps = getConnection().prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+				query += " WHERE ID > ?";
+
+				ps = getConnection().prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 				ps.setInt(1, lastID);
-				resultset = ps.executeQuery();
-
-				System.out.println(" : "+IRestAction.fetchData(resultset));
 			}
+
 			else if (config.get("increment.timestamp") != null){
-				query2 = query2 + " WHERE TIMESTAMP > ?";
-				PreparedStatement ps = getConnection().prepareStatement(query2, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-				ps.setTimestamp(1,lastTimestamp);
-				resultset = ps.executeQuery();
+				query += " WHERE TIMESTAMP > ?";
 
-				System.out.println(" : "+IRestAction.fetchData(resultset));
+				ps = getConnection().prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+				ps.setTimestamp(1,lastTimestamp);
 			}
+
+			resultset = ps.executeQuery();
+			System.out.println(": " + IRestAction.fetchData(resultset));
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+
 		return resultset;
 	}
 
@@ -95,105 +127,44 @@ public class DBConnector {
 		if(lastID < newID) {
 			try {
 				lastID = newID;
-				content = Integer.toString(lastID);
-				file = new File(".id");
-				fos = new FileOutputStream(file);
+				String content = Integer.toString(lastID);
+				writeToFile(".id", content);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
-				// if file doesnt exists, then create it
-				if (!file.exists()) {
-					file.createNewFile();
-				}
 
-				byte[] contentInBytes = content.getBytes();
-
-				fos.write(contentInBytes);
-				fos.flush();
-				fos.close();
-
-				System.out.println("Done");
+	public void lastTimestampChanged (Timestamp newTimeStamp) {
+		if(lastTimestamp.before(newTimeStamp)) {
+			try {
+				lastTimestamp = newTimeStamp;
+				String content = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS.ms").format(lastTimestamp);
+				writeToFile(".timestamp", content);
 
 			} catch (IOException e) {
 				e.printStackTrace();
-			} finally {
-				try {
-					if (fos != null) {
-						fos.close();
-					}
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
 			}
 		}
 	}
 
-    public void lastTimestampChanged (Timestamp newTimeStamp) {
-        if(lastTimestamp.before(newTimeStamp)) {
-            try {
-                lastTimestamp = newTimeStamp;
-                content = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS.ms").format(lastTimestamp);
-                file = new File(".timestamp");
-                fos = new FileOutputStream(file);
+	private void writeToFile(String filePath, String content) throws IOException {
 
-                // if file doesnt exists, then create it
-                if (!file.exists()) {
-                    file.createNewFile();
-                    System.out.println("File Created");
-                }
+		File file = new File(filePath);
+		FileOutputStream fos = new FileOutputStream(file);
 
-                byte[] contentInBytes = content.getBytes();
+		if (!file.exists() && file.createNewFile()){
+			System.out.println("File successfully created.");
+		}
 
-                fos.write(contentInBytes);
-                fos.flush();
-                fos.close();
+		fos.write(content.getBytes());
+		fos.close();
 
-                System.out.println("Done");
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    if (fos != null) {
-                        fos.close();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
+		System.out.println("Done");
+	}
 
 	public RestConnector getRestConnector(){
 		return this.restConnector;
-	}
-
-	private boolean isEmpty(ResultSet resultSet){
-		boolean returnvalue = false;
-		try {
-			if(!resultSet.next()){
-				returnvalue= true;
-			}
-			resultSet.beforeFirst();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return returnvalue;
-	}
-	
-	private void close() {
-        try {
-            if (resultset != null) {
-                resultset.close();
-            }
-
-            if (statement != null) {
-                statement.close();
-            }
-
-            if (conn != null) {
-                conn.close();
-            }
-        } catch (Exception e) {
-
-        }
 	}
 }

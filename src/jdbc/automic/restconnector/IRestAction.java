@@ -7,12 +7,12 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 public interface IRestAction {
-	public void action(JSONArray array);
+	void action(JSONArray array);
 	
-	@SuppressWarnings("unchecked")
-	public static JSONArray fetchData(ResultSet set) throws SQLException {
+	static JSONArray fetchData(ResultSet set) throws SQLException {
 		JSONArray array = new JSONArray();
 		JSONObject tableEntry = null;
+
 		while(set.next()) {
 			tableEntry = new JSONObject();
 			int i = 1;
