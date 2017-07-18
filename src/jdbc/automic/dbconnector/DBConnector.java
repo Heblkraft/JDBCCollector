@@ -28,7 +28,7 @@ public class DBConnector {
 	public Connection getConnection() {
 		try {
 			if(conn == null) {
-			    String jdbcstring = "jdbc:sqlserver://192.168.216.25:1433;DatabaseName=jdbc_test;user=jdbc_user;password=123;"; // TESTSTRING
+			    String jdbcstring = "jdbc:sqlserver://192.168.216.33:1433;DatabaseName=jdbc_test;user=jdbc_user;password=123;"; // TESTSTRING
 		    	return conn = DriverManager.getConnection(jdbcstring);
 	    	} else {
 	    		return conn;
