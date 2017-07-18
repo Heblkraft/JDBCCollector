@@ -24,6 +24,9 @@ public class MainClass {
 			System.exit(-1);
 		}
 
+        System.setErr(System.err);
+        System.setOut(System.out);
+
 		File dbConfig = new File(args[0]);
 		File restConfig = new File(args[1]);
 
@@ -41,7 +44,9 @@ public class MainClass {
 			System.out.println(entry.getKey() + "     " + entry.getValue());
 		}
 
+		ConfigLoader.validateConfiguration();
+
 		RestConnector restConnector = new RestConnector();
-		new DBConnector(restConnector);
+		DBConnector connector = new DBConnector(restConnector);
 	}
 }
