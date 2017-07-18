@@ -63,14 +63,15 @@ public class DBConnector {
 
 			if(!idFile.exists() && idFile.createNewFile()){
 				System.out.println(VIA_ID + " successfully created.");
+                Files.write(Paths.get(VIA_ID), Integer.toString(ID_START_VALUE).getBytes());
 			}
 
 			if(!timestampFile.exists() && timestampFile.createNewFile()){
 				System.out.println(VIA_TIMESTAMP + " successfully created.");
-			}
+                Files.write(Paths.get(VIA_TIMESTAMP), TIMESTAMP_START_VALUE.getBytes());
+            }
 
-			Files.write(Paths.get(VIA_ID), Integer.toString(ID_START_VALUE).getBytes());
-			Files.write(Paths.get(VIA_TIMESTAMP), TIMESTAMP_START_VALUE.getBytes());
+
 
 		} catch (IOException e) {
 			e.printStackTrace();
