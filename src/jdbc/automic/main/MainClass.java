@@ -15,8 +15,6 @@ import static jdbc.automic.configuration.ConfigLoader.config;
 
 public class MainClass {
 
-	public static ConfigLoader loader;
-
 	public static void main(String[] args) {
 
 		if(args.length < 2){
