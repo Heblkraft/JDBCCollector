@@ -1,16 +1,15 @@
 package jdbc.automic.dbconnector;
 
-import com.sun.org.apache.regexp.internal.RE;
+import static jdbc.automic.configuration.ConfigLoader.config;
 import jdbc.automic.restconnector.IRestAction;
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 public class CharlesQueryThread extends Thread{
-	DBConnector dbConnector;
-	private static final boolean ID = true;
+	private DBConnector dbConnector;
 
 	public CharlesQueryThread(String name, DBConnector dbConnector) {
 		super(name);
@@ -19,7 +18,28 @@ public class CharlesQueryThread extends Thread{
 
 	@Override
 	public void run() {
-		ResultSet rs = dbConnector.sendQuery(MainQueryThread.QUERY);
-		if(rs == null) System.out.println(currentThread().getName()+": Resultset == null");
+		ResultSet rs = dbConnector.sendQuery(config.get("query"));
+		if(isEmpty(rs)) dbConnector.lastIDChanged(0);
+		else {
+			try {
+				JSONArray array = IRestAction.fetchData(rs);
+				dbConnector.lastIDChanged(Integer.parseInt(((JSONObject)array.get(array.size()-1)).get("id").toString()));
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	private boolean isEmpty(ResultSet resultSet){
+		boolean returnvalue = false;
+		try {
+			if(!resultSet.next()){
+				returnvalue= true;
+			}
+			resultSet.beforeFirst();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return returnvalue;
 	}
 }
