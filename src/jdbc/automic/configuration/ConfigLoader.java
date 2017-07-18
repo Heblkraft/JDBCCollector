@@ -1,7 +1,5 @@
 package jdbc.automic.configuration;
 
-import sun.security.krb5.Config;
-
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -20,17 +18,28 @@ public class ConfigLoader {
 
     private Path dbConfigFile;
     private Path restConfigFile;
+    private HashMap<String, String> config;
 
     public ConfigLoader(String dbConfigFile, String restConfigFile) {
         this.dbConfigFile = Paths.get(dbConfigFile);
         this.restConfigFile = Paths.get(restConfigFile);
     }
 
-    public void load() {
-        Map<String, String> config = new HashMap<String, String>();
-        config.putAll(parseConfigFile(dbConfigFile));
-        config.putAll(parseConfigFile(restConfigFile));
+    public ConfigLoader(String dbConfigFile, String restConfigFile, boolean autoload) {
+        this.dbConfigFile = Paths.get(dbConfigFile);
+        this.restConfigFile = Paths.get(restConfigFile);
+        if(autoload) load();
+    }
 
+    public void load() {
+        this.config = new HashMap<>();
+
+        this.config.putAll(parseConfigFile(dbConfigFile));
+        this.config.putAll(parseConfigFile(restConfigFile));
+    }
+
+    public HashMap<String, String> getConfiguration(){
+        return this.config;
     }
 
     private static List<String> readConfigFile(Path path) {
@@ -63,28 +72,6 @@ public class ConfigLoader {
 
         return config;
     }
-
-    public static void main(String[] args) {
-
-        File dbconnection_config = new File("./dbconnection.properties");
-        File restconnection_config = new File("./restconnection.properties");
-
-        try {
-            if (!dbconnection_config.exists()) {
-                dbconnection_config.createNewFile();
-            }
-
-            if (!restconnection_config.exists()) {
-                restconnection_config.createNewFile();
-            }
-        }catch(IOException ioe){
-            ioe.printStackTrace();
-        }
-
-        ConfigLoader config = new ConfigLoader("./dbconnection.properties", "./restconnection.properties");
-        config.load();
-    }
-
 }
 
 
