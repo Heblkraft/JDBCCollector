@@ -101,7 +101,6 @@ public class RestCaller {
 		this.httpclient = HttpClientBuilder.create().
 					      setDefaultCredentialsProvider(credentialsProvider).
 					      setDefaultHeaders(headerList).build();
-		
 		addParametersToRequest();
 	}
 	
