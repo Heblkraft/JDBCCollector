@@ -1,45 +1,21 @@
 package jdbc.automic.configuration;
 
-import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ConfigLoader {
 
-    private Path dbConfigFile;
-    private Path restConfigFile;
-    private HashMap<String, String> config;
+    public static HashMap<String, String> config = new HashMap<String, String>();
 
-    public ConfigLoader(String dbConfigFile, String restConfigFile) {
-        this.dbConfigFile = Paths.get(dbConfigFile);
-        this.restConfigFile = Paths.get(restConfigFile);
-    }
-
-    public ConfigLoader(String dbConfigFile, String restConfigFile, boolean autoload) {
-        this.dbConfigFile = Paths.get(dbConfigFile);
-        this.restConfigFile = Paths.get(restConfigFile);
-        if(autoload) load();
-    }
-
-    public void load() {
-        this.config = new HashMap<>();
-
-        this.config.putAll(parseConfigFile(dbConfigFile));
-        this.config.putAll(parseConfigFile(restConfigFile));
-    }
-
-    public HashMap<String, String> getConfiguration(){
-        return this.config;
+    public static void load(String dbConfigFile, String restConfigFile){
+        config.putAll(parseConfigFile(Paths.get(dbConfigFile)));
+        config.putAll(parseConfigFile(Paths.get(restConfigFile)));
     }
 
     private static List<String> readConfigFile(Path path) {
