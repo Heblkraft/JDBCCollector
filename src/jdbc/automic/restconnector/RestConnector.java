@@ -41,10 +41,12 @@ public class RestConnector implements IRestAction{
 
 		try {
 			Connection connection = DriverManager.getConnection(jdbcstring);
-			Statement statement = connection.createStatement();
-			ResultSet rs = statement.executeQuery("select * from test_table_id");
-
-			System.out.println(IRestAction.fetchData(rs).toString());
+			Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			ResultSet rs = statement.executeQuery("select * from test_table_id where id < 1");
+			if(!rs.next()){
+				System.out.println("Rs is empty");
+			}
+			rs.beforeFirst();
 
 		} catch (SQLException e) {
 			e.printStackTrace();
