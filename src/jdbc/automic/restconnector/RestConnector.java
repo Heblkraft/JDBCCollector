@@ -38,13 +38,9 @@ public class RestConnector implements IRestAction{
 		}
 	}
 	
-	
-	
-	
 	public IRestAction getRestAction() {
 		return this;
 	}
-	
 	
 	//Implementations of the IRestAction witch gets called by DbConnector;
 	@Override

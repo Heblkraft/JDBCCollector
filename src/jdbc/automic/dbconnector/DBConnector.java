@@ -17,20 +17,16 @@ public class DBConnector {
     private ResultSet resultset = null;
 	
 	private RestConnector restConnector;
+	private MainQueryThread mainQueryThread;
 
 	
 	public DBConnector(RestConnector restConnector) {
 		this.restConnector = restConnector;
-
-		try {
-			System.out.println("DB Connector");
-			getConnection();
-		}catch(SQLException e) {
-			e.printStackTrace();
-		}
+		this.mainQueryThread = new MainQueryThread(this);
+		System.out.println("DB Connector");
 	}
 	
-	public Connection getConnection() throws SQLException {
+	public Connection getConnection() {
 		try {
 			if(conn == null) {
 			    String jdbcstring = "jdbc:sqlserver://192.168.216.25:1433;DatabaseName=jdbc_test;user=jdbc_user;password=123;"; // TESTSTRING
@@ -39,10 +35,11 @@ public class DBConnector {
 	    		return conn;
 	    	}
 		}catch (Exception e) {
-			throw e;
+			e.printStackTrace();
 		}finally {
 			close();
 		}
+		return null;
 	}
 	
 	private void close() {
