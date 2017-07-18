@@ -41,6 +41,11 @@ public class DBConnector {
 		}
 		return null;
 	}
+
+	public ResultSet sendQuery(String query){
+
+		return null;
+	}
 	
 	private void close() {
         try {
