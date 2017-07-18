@@ -21,11 +21,5 @@ public class CharlesQueryThread extends Thread{
 	public void run() {
 		ResultSet rs = dbConnector.sendQuery(MainQueryThread.QUERY);
 		if(rs == null) System.out.println(currentThread().getName()+": Resultset == null");
-		try {
-			System.out.println(currentThread().getName()+" : "+IRestAction.fetchData(rs));
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
 	}
 }
