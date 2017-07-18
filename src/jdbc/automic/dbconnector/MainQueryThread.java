@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class MainQueryThread extends Thread{
-	private static final int POLL_TIME = 6000;
+	private static final int POLL_TIME = 2;
 	protected static final String QUERY = "select * from test_table_id";
 	
 	private DBConnector dbconnector;
@@ -42,13 +42,16 @@ public class MainQueryThread extends Thread{
 				try {
 				thread.start();
 				} catch (IllegalThreadStateException e){
-					continue;
+					subThreads.set(subThreads.indexOf(thread),new CharlesQueryThread(thread.getName(), dbconnector));
 				}
-
+				for(CharlesQueryThread threads : subThreads){
+					System.out.println(threads.getName()+" - "+threads.getState());
+				}
 				return;
 			}
 		}
 	}
+
 	
 	private void initThreadPool(int number) {
 		for(int i = 0; i<number; i++) {
