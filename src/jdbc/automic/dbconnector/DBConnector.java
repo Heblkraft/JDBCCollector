@@ -1,10 +1,6 @@
 package jdbc.automic.dbconnector;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 import jdbc.automic.restconnector.IRestAction;
 import jdbc.automic.restconnector.RestConnector;
@@ -15,6 +11,9 @@ public class DBConnector {
 	private Connection conn = null;
     private Statement statement = null;
     private ResultSet resultset = null;
+
+    private int lastID;
+    private Timestamp lastTimestamp = null;
 	
 	private RestConnector restConnector;
 	private MainQueryThread mainQueryThread;
@@ -43,7 +42,15 @@ public class DBConnector {
 	}
 
 	public ResultSet sendQuery(String query){
+		try {
+			PrepareStatement ps = getConnection().prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 
+		resultset = stmt.executeQuery(query + " WHERE ID = ?");
+
+		resultset = stmt.executeQuery(query + " WHERE TIMESTAMP = ?");
 		return null;
 	}
 	
