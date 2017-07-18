@@ -58,6 +58,19 @@ public class DBConnector {
 		//resultset = stmt.executeQuery(query + " WHERE TIMESTAMP = ?");
 		return null;
 	}
+
+	private boolean isEmpty(ResultSet resultSet){
+		boolean returnvalue = false;
+		try {
+			if(!resultSet.next()){
+				returnvalue= true;
+			}
+			resultSet.beforeFirst();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return returnvalue;
+	}
 	
 	private void close() {
         try {

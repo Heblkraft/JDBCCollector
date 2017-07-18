@@ -42,7 +42,7 @@ public class MainClass {
 			System.out.println(entry.getKey() + "     " + entry.getValue());
 		}
 
-		//RestConnector restConnector = new RestConnector();
-		//new DBConnector(restConnector);
+		RestConnector restConnector = new RestConnector();
+		new DBConnector(restConnector);
 	}
 }
