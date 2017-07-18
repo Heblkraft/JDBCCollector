@@ -3,11 +3,9 @@ package jdbc.automic.dbconnector;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import static jdbc.automic.configuration.ConfigLoader.config;
 
 public class MainQueryThread extends Thread{
-	private static final int POLL_TIME = 2000;
-	protected static final String QUERY = "select * from test_table_id";
-	
 	private DBConnector dbconnector;
 	private List<CharlesQueryThread> subThreads;
 	private boolean killFlag = false;
@@ -16,7 +14,7 @@ public class MainQueryThread extends Thread{
 		super("MainThread");
 		this.dbconnector = dbconnector;
 		subThreads = Collections.synchronizedList(new ArrayList<>());
-		initThreadPool(10);
+		initThreadPool(Integer.parseInt(config.get("max.threadpool")));
 	}
 
 	@Override
@@ -25,7 +23,7 @@ public class MainQueryThread extends Thread{
 		while(!killFlag) {
 			startThread();
 			try {
-				Thread.sleep(POLL_TIME);
+				Thread.sleep(Integer.parseInt(config.get("poll.interval")));
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

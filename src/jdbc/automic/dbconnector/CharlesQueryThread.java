@@ -23,7 +23,7 @@ public class CharlesQueryThread extends Thread{
 		else {
 			try {
 				JSONArray array = IRestAction.fetchData(rs);
-				dbConnector.lastIDChanged(Integer.parseInt(((JSONObject)array.get(array.size()-1)).get("id").toString()));
+				dbConnector.lastIDChanged(Integer.parseInt(((JSONObject)array.get(array.size()-1)).get(config.get("incremenet.id")).toString())); //Returns the last Id in the Query and gives it to the dbConnector
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
