@@ -136,7 +136,6 @@ public class DBConnector {
 		}
 	}
 
-
 	public void lastTimestampChanged (Timestamp newTimeStamp) {
 		if(lastTimestamp.before(newTimeStamp)) {
 			try {
