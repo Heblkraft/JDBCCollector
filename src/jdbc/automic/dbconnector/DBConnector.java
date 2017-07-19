@@ -11,9 +11,12 @@ import java.util.ArrayList;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import jdbc.automic.restconnector.IRestAction;
 import jdbc.automic.restconnector.RestConnector;
+import org.apache.log4j.Logger;
+
 import static jdbc.automic.configuration.ConfigLoader.config;
 
 public class DBConnector {
+	private final Logger logger = Logger.getLogger(DBConnector.class);
 	private Connection conn;
 
     private int lastID = 0;
@@ -46,14 +49,14 @@ public class DBConnector {
             }
 		}
 		catch(IOException | IndexOutOfBoundsException e) {
-			System.err.println("Can not open file or file is empty.");
+			logger.error("Can not open file or file is empty.");
 		}
 
 		this.restConnector = restConnector;
 
 		new MainQueryThread(this).start();
 
-		System.out.println("DB Connector");
+		logger.debug("Created DB Connector Instance");
 	}
 
 	private void initTempFiles(){
@@ -63,19 +66,20 @@ public class DBConnector {
 		try {
 
 			if(!idFile.exists() && idFile.createNewFile()){
-				System.out.println(VIA_ID + " successfully created.");
+				logger.info(VIA_ID + " successfully created.");
                 Files.write(Paths.get(VIA_ID), Integer.toString(ID_START_VALUE).getBytes());
 			}
 
 			if(!timestampFile.exists() && timestampFile.createNewFile()){
-				System.out.println(VIA_TIMESTAMP + " successfully created.");
+				logger.info(VIA_TIMESTAMP + " successfully created.");
                 Files.write(Paths.get(VIA_TIMESTAMP), TIMESTAMP_START_VALUE.getBytes());
             }
 
 
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Can't create File");
+			logger.trace("",e);
 		}
 
 
@@ -83,13 +87,16 @@ public class DBConnector {
 
 	private Connection getConnection() {
 		try {
+
 			if(conn == null) {
-		    	return conn = DriverManager.getConnection(config.get("dbconnection"));
-	    	} else {
-	    		return conn;
+                logger.debug("Building Connection to Database...");
+		    	conn = DriverManager.getConnection(config.get("dbconnection"));
+		    	logger.debug("Connected to " + conn.getMetaData().getDatabaseProductName());
 	    	}
+            return conn;
 		}catch (Exception e) {
 			conn = null;
+			logger.info("Lost Connection to Database!");
 		}
 		return null;
 	}
@@ -131,7 +138,8 @@ public class DBConnector {
 				String content = Integer.toString(lastID);
 				writeToFile(VIA_ID, content);
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Can't write to file .id");
+				logger.trace("",e);
 			}
 		}
 	}
@@ -144,7 +152,8 @@ public class DBConnector {
 				writeToFile(VIA_TIMESTAMP, content);
 
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Can't write to file .timestamp");
+				logger.trace("",e);
 			}
 		}
 	}
@@ -155,13 +164,13 @@ public class DBConnector {
 		FileOutputStream fos = new FileOutputStream(file);
 
 		if (!file.exists() && file.createNewFile()){
-			System.out.println("File successfully created.");
+			logger.info("File successfully created!");
 		}
 
 		fos.write(content.getBytes());
 		fos.close();
 
-		System.out.println("Done");
+		logger.info("Written to File " + filePath);
 	}
 
 	public RestConnector getRestConnector(){

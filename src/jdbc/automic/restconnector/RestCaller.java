@@ -29,8 +29,10 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
+import org.apache.log4j.Logger;
 
 public class RestCaller {
+	private final Logger logger = Logger.getLogger(RestCaller.class);
 	public enum Method { GET , POST }
 	
 	private CloseableHttpClient httpclient;
@@ -50,6 +52,7 @@ public class RestCaller {
 		this.nameValueList = new ArrayList<>();
 		this.headerList = new ArrayList<>();
 		setMethod(method);
+		logger.debug("HttpClient Method "+ method.name());
 	}
 	
 	public void setMethod(Method method) {
@@ -104,6 +107,7 @@ public class RestCaller {
 					setDefaultHeaders(headerList).build();
 		}
 		addParametersToRequest();
+		logger.debug("Building HttpRequest");
 	}
 	
 	public void addParametersToRequest() throws URISyntaxException, UnsupportedEncodingException {
@@ -127,6 +131,7 @@ public class RestCaller {
 	public void execute() throws IOException {
 		if(httpcontext != null) response = httpclient.execute(httpRequestBase,httpcontext);
 		else response = httpclient.execute(httpRequestBase);
+		logger.debug("Sending HttpRequest");
 	}
 	
 	//Returnes the Response from the previous Execution
@@ -140,8 +145,10 @@ public class RestCaller {
 			EntityUtils.consume(response.getEntity());
 			response.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.debug("Cannot close HttpResponse");
+			logger.trace("", e);
 		}
+		logger.debug("Closing the HttpResponse");
 	}
 	
 	//if you finished working with the client you need to close the client
@@ -149,7 +156,9 @@ public class RestCaller {
 		try {
 			httpclient.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.debug("Cannot close HttpClient");
+			logger.trace("",e);
 		}
+		logger.debug("Closing HttpClient");
 	}
 }
