@@ -7,10 +7,13 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.apache.log4j.Logger;
 
 public class ConfigLoader implements ConfigModel {
 
     public static final HashMap<String, String> config = new HashMap<>();
+
+    private static Logger logger = Logger.getLogger(ConfigLoader.class);
 
     // better name than dbConfigFile du fgt
 
@@ -19,13 +22,9 @@ public class ConfigLoader implements ConfigModel {
         config.putAll(parseConfigFile(Paths.get(dbConfigFile)));
         config.putAll(parseConfigFile(Paths.get(restConfigFile)));
 
-        if(validateAndOptimizeConfiguration()) {
-            System.err.println("Configuration successfully loaded.");
+        if(validateAndOptimizeConfiguration()) logger.info("Configuration loaded successfully.");
+        else logger.error("Failed to load configuration file. Check your .properties files.");
 
-        }
-        else{
-            System.err.println("Configuration could not be loaded because of some unresolved errors. ");
-        }
     }
 
     public static void overwriteConfig(){
@@ -43,13 +42,11 @@ public class ConfigLoader implements ConfigModel {
           if(config.get(configLineTokens[0]) == null){
               missingKeys.add(configLineTokens[0]);
           }
-
-
         }
 
         if(missingKeys.size() != 0){
             for(String missingKey : missingKeys){
-               System.err.println("Attribute " + missingKey.toUpperCase() + " is required but not set.");
+               logger.error(String.format("Attribute [ {0} ] is required but not set.", missingKey));
             }
             return false;
         }
@@ -81,10 +78,6 @@ public class ConfigLoader implements ConfigModel {
 
             String key = pairs[0].trim();
             String value = pairs[1].trim();
-
-            System.out.println(value);
-
-            // hier fehlt noch der teil wenn es kein = zeichen gibt.
 
             config.put(key, value.isEmpty() ? null : value);
         }

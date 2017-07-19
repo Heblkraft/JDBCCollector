@@ -23,8 +23,6 @@ public class MainClass {
             System.exit(-1);
         }
 
-        System.setErr(System.err);
-        System.setOut(System.out);
 
         File dbConfig = new File(args[0]);
         File restConfig = new File(args[1]);
@@ -35,13 +33,8 @@ public class MainClass {
         }
 
         System.out.println(Arrays.toString(args));
-        System.out.println(args.length);
 
         ConfigLoader.load("./dbconnection.properties", "./restconnection.properties");
-
-        for (Map.Entry<String, String> entry : config.entrySet()) {
-            System.out.println(entry.getKey() + "     " + entry.getValue());
-        }
 
         RestConnector restConnector = new RestConnector();
         DBConnector connector = new DBConnector(restConnector);
