@@ -3,10 +3,13 @@ package jdbc.automic.restconnector;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 public interface IRestAction {
+	Logger logger = Logger.getLogger(IRestAction.class);
+
 	void action(JSONArray array);
 	
 	static JSONArray fetchData(ResultSet set) throws SQLException {
@@ -22,6 +25,8 @@ public interface IRestAction {
 			array.add(tableEntry);
 		}
 		set.beforeFirst();
+		logger.debug("Fetching Resultset to JSONArray");
+		logger.debug(array);
 		return array;
 	}
 }

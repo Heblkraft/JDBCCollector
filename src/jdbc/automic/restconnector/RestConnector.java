@@ -11,6 +11,7 @@ import java.net.URISyntaxException;
 import static jdbc.automic.configuration.ConfigLoader.config;
 
 public class RestConnector implements IRestAction {
+    //Finished
     Logger logger = Logger.getLogger(RestConnector.class);
 
     private final RestCaller restCaller = new RestCaller(config.get("rest.url"), Method.POST);
