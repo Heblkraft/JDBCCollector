@@ -79,6 +79,14 @@ public class ConfigLoader implements ConfigModel {
             String key = pairs[0].trim();
             String value = pairs[1].trim();
 
+            if(value.contains(".sql")){
+                try {
+                    value = Files.readAllLines(Paths.get(value)).get(0);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
             config.put(key, value.isEmpty() ? null : value);
         }
 

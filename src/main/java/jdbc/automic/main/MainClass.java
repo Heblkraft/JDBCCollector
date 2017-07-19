@@ -13,16 +13,19 @@ import java.util.Map;
 
 import static jdbc.automic.configuration.ConfigLoader.config;
 
+import org.apache.log4j.Logger;
+
+
 public class MainClass {
 
-    public static void main(String[] args) {
+    private static final Logger logger = Logger.getLogger(MainClass.class);
 
+    public static void main(String[] args) {
 
         if (args.length < 2) {
             System.err.println("Only " + args.length + " arguments were given, but 2 are required");
             System.exit(-1);
         }
-
 
         File dbConfig = new File(args[0]);
         File restConfig = new File(args[1]);
@@ -34,9 +37,11 @@ public class MainClass {
 
         System.out.println(Arrays.toString(args));
 
+
+
         ConfigLoader.load("./dbconnection.properties", "./restconnection.properties");
 
-        RestConnector restConnector = new RestConnector();
-        DBConnector connector = new DBConnector(restConnector);
+        //RestConnector restConnector = new RestConnector();
+        //DBConnector connector = new DBConnector(restConnector);
     }
 }
