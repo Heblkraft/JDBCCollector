@@ -1,11 +1,14 @@
 package jdbc.automic.dbconnector;
 
+import org.apache.log4j.Logger;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import static jdbc.automic.configuration.ConfigLoader.config;
 
 class MainQueryThread extends Thread{
+	private Logger logger = Logger.getLogger(MainQueryThread.class);
 	private final DBConnector dbconnector;
 	private final List<CharlesQueryThread> subThreads;
 	private boolean killFlag = false;
@@ -15,6 +18,7 @@ class MainQueryThread extends Thread{
 		this.dbconnector = dbconnector;
 		subThreads = Collections.synchronizedList(new ArrayList<>());
 		initThreadPool(Integer.parseInt(config.get("max.threadpool")));
+		logger.debug("Setting Thread-pool-Size to "+ config.get("max.threadpool"));
 	}
 
 	@Override
