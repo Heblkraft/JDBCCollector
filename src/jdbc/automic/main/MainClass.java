@@ -19,7 +19,7 @@ public class MainClass {
 
 
         if (args.length < 2) {
-            System.err.println("Only " + args.length + " arguments were given, but 2 are required");
+            System.err.println("Only " + args.length + " argumentsf were given, but 2 are required");
             System.exit(-1);
         }
 
