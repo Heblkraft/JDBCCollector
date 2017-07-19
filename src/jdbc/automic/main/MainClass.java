@@ -15,35 +15,35 @@ import static jdbc.automic.configuration.ConfigLoader.config;
 
 public class MainClass {
 
-	public static void main(String[] args) {
+    public static void main(String[] args) {
 
 
-		if(args.length < 2){
-			System.err.println("Only " + args.length + " arguments were given, but 2 are required");
-			System.exit(-1);
-		}
+        if (args.length < 2) {
+            System.err.println("Only " + args.length + " arguments were given, but 2 are required");
+            System.exit(-1);
+        }
 
         System.setErr(System.err);
         System.setOut(System.out);
 
-		File dbConfig = new File(args[0]);
-		File restConfig = new File(args[1]);
+        File dbConfig = new File(args[0]);
+        File restConfig = new File(args[1]);
 
-		if(!dbConfig.exists() || !restConfig.exists()){
-			System.err.println("Cannot find or load .properties file in directory " + dbConfig.getAbsolutePath());
-			System.exit(-1);
-		}
+        if (!dbConfig.exists() || !restConfig.exists()) {
+            System.err.println("Cannot find or load .properties file in directory " + dbConfig.getAbsolutePath());
+            System.exit(-1);
+        }
 
-		System.out.println(Arrays.toString(args));
-		System.out.println(args.length);
+        System.out.println(Arrays.toString(args));
+        System.out.println(args.length);
 
-		ConfigLoader.load("./dbconnection.properties", "./restconnection.properties");
+        ConfigLoader.load("./dbconnection.properties", "./restconnection.properties");
 
-		for(Map.Entry<String, String> entry : config.entrySet()){
-			System.out.println(entry.getKey() + "     " + entry.getValue());
-		}
+        for (Map.Entry<String, String> entry : config.entrySet()) {
+            System.out.println(entry.getKey() + "     " + entry.getValue());
+        }
 
-		RestConnector restConnector = new RestConnector();
-		DBConnector connector = new DBConnector(restConnector);
-	}
+        RestConnector restConnector = new RestConnector();
+        DBConnector connector = new DBConnector(restConnector);
+    }
 }
