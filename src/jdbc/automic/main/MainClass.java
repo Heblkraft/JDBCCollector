@@ -10,16 +10,19 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.log4j.Logger;
 
 import static jdbc.automic.configuration.ConfigLoader.config;
+import org.apache.log4j.Logger;
 
 public class MainClass {
 
 	public static void main(String[] args) {
 
+		final Logger logger = Logger.getLogger(DBConnector.class);
 
 		if(args.length < 2){
-			System.err.println("Only " + args.length + " arguments were given, but 2 are required");
+			logger.error("Only " + args.length + " arguments were given, but 2 are required");
 			System.exit(-1);
 		}
 
@@ -30,20 +33,20 @@ public class MainClass {
 		File restConfig = new File(args[1]);
 
 		if(!dbConfig.exists() || !restConfig.exists()){
-			System.err.println("Cannot find or load .properties file in directory " + dbConfig.getAbsolutePath());
+			logger.error("Cannot find or load .properties file in directory " + dbConfig.getAbsolutePath());
 			System.exit(-1);
 		}
 
-		System.out.println(Arrays.toString(args));
-		System.out.println(args.length);
+		logger.debug("Loaded arguments: " +Arrays.toString(args));
+
 
 		ConfigLoader.load("./dbconnection.properties", "./restconnection.properties");
 
 		for(Map.Entry<String, String> entry : config.entrySet()){
-			System.out.println(entry.getKey() + "     " + entry.getValue());
+			logger.info(entry.getKey() + "     " + entry.getValue());
 		}
 
 		RestConnector restConnector = new RestConnector();
-		DBConnector connector = new DBConnector(restConnector);
+		new DBConnector(restConnector);
 	}
 }
