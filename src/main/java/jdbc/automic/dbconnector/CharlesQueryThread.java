@@ -2,7 +2,7 @@ package jdbc.automic.dbconnector;
 
 import static jdbc.automic.configuration.ConfigLoader.config;
 
-import com.sun.jna.platform.win32.WinDef;
+
 import jdbc.automic.restconnector.IRestAction;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
