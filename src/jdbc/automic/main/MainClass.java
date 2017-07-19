@@ -43,7 +43,7 @@ public class MainClass {
 		ConfigLoader.load("./dbconnection.properties", "./restconnection.properties");
 
 		for(Map.Entry<String, String> entry : config.entrySet()){
-			logger.info(entry.getKey() + "     " + entry.getValue());
+			logger.debug(entry.getKey() + "     " + entry.getValue());
 		}
 
 		RestConnector restConnector = new RestConnector();
