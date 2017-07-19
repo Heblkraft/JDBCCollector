@@ -87,12 +87,13 @@ public class DBConnector {
 
 	private Connection getConnection() {
 		try {
+
 			if(conn == null) {
-				logger.debug("Building Connection to Database...");
-		    	return conn = DriverManager.getConnection(config.get("dbconnection"));
-	    	} else {
-	    		return conn;
+                logger.debug("Building Connection to Database...");
+		    	conn = DriverManager.getConnection(config.get("dbconnection"));
+		    	logger.debug("Connected to " + conn.getMetaData().getDatabaseProductName());
 	    	}
+            return conn;
 		}catch (Exception e) {
 			conn = null;
 			logger.info("Lost Connection to Database!");
