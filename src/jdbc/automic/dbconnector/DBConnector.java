@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.time.Clock;
 import java.util.ArrayList;
 
+import com.microsoft.sqlserver.jdbc.SQLServerException;
 import jdbc.automic.restconnector.IRestAction;
 import jdbc.automic.restconnector.RestConnector;
 import static jdbc.automic.configuration.ConfigLoader.config;
@@ -88,7 +89,7 @@ public class DBConnector {
 	    		return conn;
 	    	}
 		}catch (Exception e) {
-			e.printStackTrace();
+			conn = null;
 		}
 		return null;
 	}
@@ -101,7 +102,7 @@ public class DBConnector {
 		try {
 
 			if(config.get("increment.id") != null){
-				query += " WHERE ID > ?";
+				query += " WHERE "+config.get("increment.id")+" > ?";
 
 				ps = getConnection().prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 				ps.setInt(1, lastID);
@@ -113,12 +114,11 @@ public class DBConnector {
 				ps = getConnection().prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 				ps.setTimestamp(1,lastTimestamp);
 			}
-
 			resultset = ps.executeQuery();
-			System.out.println(": " + IRestAction.fetchData(resultset));
+
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			conn = null;
 		}
 
 		return resultset;
@@ -129,20 +129,19 @@ public class DBConnector {
 			try {
 				lastID = newID;
 				String content = Integer.toString(lastID);
-				writeToFile(".id", content);
+				writeToFile(VIA_ID, content);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
 	}
 
-
 	public void lastTimestampChanged (Timestamp newTimeStamp) {
 		if(lastTimestamp.before(newTimeStamp)) {
 			try {
 				lastTimestamp = newTimeStamp;
 				String content = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS.ms").format(lastTimestamp);
-				writeToFile(".timestamp", content);
+				writeToFile(VIA_TIMESTAMP, content);
 
 			} catch (IOException e) {
 				e.printStackTrace();

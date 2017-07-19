@@ -8,10 +8,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
+import static jdbc.automic.configuration.ConfigLoader.config;
 
 public class RestConnector implements IRestAction {
 
-    private final RestCaller restCaller = new RestCaller("https://postman-echo.com/post", Method.POST);
+    private final RestCaller restCaller = new RestCaller(config.get("rest.url"), Method.POST);
 
     //Initializes the RestCaller
     public RestConnector() {
@@ -34,24 +35,25 @@ public class RestConnector implements IRestAction {
     @Override
     public void action(JSONArray array) {
         for (Object obj : array) {
-            JSONObject jsonObject = (JSONObject) obj;
             JSONObject jsonSent = new JSONObject();
-            jsonSent.put("eventname", "buildRequest");
-            restCaller.setBody(jsonObject.toString());
+            jsonSent.put("values", (JSONObject) obj);
+            jsonSent.put("eventname", config.get("rest.eventname"));
+            restCaller.setBody(jsonSent.toString());
+
             try {
-                restCaller.addParametersToRequest();
+                restCaller.build();
                 restCaller.execute();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(restCaller.getResponse()));
                 String s = null;
                 while((s = reader.readLine())!= null){
-                    System.out.println(s);
+                    System.out.println("Returned: "+s);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (URISyntaxException e) {
                 e.printStackTrace();
             }
-            System.out.println("RestCaller sent: " + jsonObject);
+            System.out.println("RestCaller sent: " + jsonSent);
         }
     }
 }

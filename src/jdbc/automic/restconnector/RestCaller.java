@@ -98,9 +98,11 @@ public class RestCaller {
 	//if Authentification or header or Parameters changed you need to rebuild the client
 	public void build() throws UnsupportedEncodingException, URISyntaxException {
 		//Adding Credentials to HttpClient & Adding Headers to HttpClient
-		this.httpclient = HttpClientBuilder.create().
-					      setDefaultCredentialsProvider(credentialsProvider).
-					      setDefaultHeaders(headerList).build();
+		if(!headerList.isEmpty() || !(credentialsProvider == null)) {
+			this.httpclient = HttpClientBuilder.create().
+					setDefaultCredentialsProvider(credentialsProvider).
+					setDefaultHeaders(headerList).build();
+		}
 		addParametersToRequest();
 	}
 	
