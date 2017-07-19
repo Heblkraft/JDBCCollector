@@ -1,27 +1,33 @@
 package jdbc.automic.restconnector;
 
 import jdbc.automic.restconnector.RestCaller.Method;
+import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import javax.swing.plaf.nimbus.State;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
+import java.sql.*;
+
 import static jdbc.automic.configuration.ConfigLoader.config;
 
 public class RestConnector implements IRestAction {
+    Logger logger = Logger.getLogger(RestConnector.class);
 
     private final RestCaller restCaller = new RestCaller(config.get("rest.url"), Method.POST);
 
     //Initializes the RestCaller
     public RestConnector() {
+        logger.error("RestConnector Error");
+        logger.debug("RestConnector Debug");
         try {
             restCaller.addHeader("Authorization", "73f62553-bec9-46e9-b89c-9ab14cd18277");
             restCaller.addHeader("Content-Type", "application/json");
             restCaller.addHeader("Accept", "application/json");
             restCaller.build();
-            restCaller.execute();
         } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
         }
