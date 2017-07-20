@@ -1,17 +1,11 @@
 package jdbc.automic.dbconnector;
-
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.*;
 import java.text.SimpleDateFormat;
-import java.time.Clock;
-import java.util.ArrayList;
-
-import jdbc.automic.restconnector.IRestAction;
 import jdbc.automic.restconnector.RestConnector;
 import org.apache.log4j.Logger;
-
 import static jdbc.automic.configuration.ConfigLoader.config;
 
 public class DBConnector {
@@ -29,7 +23,11 @@ public class DBConnector {
 
 	private final RestConnector restConnector;
 
-
+	/**
+	 * loads the increment.id or increment.timestamp config
+	 * Starts MainQueryThread
+	 * @param restConnector Instance of {@link RestConnector}
+	 */
 	public DBConnector(RestConnector restConnector) {
 		try {
             /*---------------Testing---------------------------------------------
@@ -58,12 +56,14 @@ public class DBConnector {
 		logger.debug("Created DB Connector Instance");
 	}
 
+	/**
+	 * <p>Creating idFile or timestampFile</p>
+	 */
 	private void initTempFiles(){
 		File idFile = new File(VIA_ID);
 		File timestampFile = new File(VIA_TIMESTAMP);
 
 		try {
-
 			if(!idFile.exists() && idFile.createNewFile()){
 				logger.info(VIA_ID + " successfully created.");
                 Files.write(Paths.get(VIA_ID), Integer.toString(ID_START_VALUE).getBytes());
@@ -73,17 +73,16 @@ public class DBConnector {
 				logger.info(VIA_TIMESTAMP + " successfully created.");
                 Files.write(Paths.get(VIA_TIMESTAMP), TIMESTAMP_START_VALUE.getBytes());
             }
-
-
-
 		} catch (IOException e) {
 			logger.error("Can't create File");
 			logger.trace("",e);
 		}
-
-
 	}
 
+	 /**
+	  * <p>Creates a Connection to the Database.</p>
+	  * @return Returns the connection to the Database or null to try again
+	  */
 	private Connection getConnection() {
 		try {
 
@@ -100,6 +99,11 @@ public class DBConnector {
 		return null;
 	}
 
+	/**
+	 * Adds a prepared Statement to a SQL_Query and Executes it
+	 * @param query contains the sql-query command
+	 * @return a resultset is returned from the executed Query
+	 */
 	public ResultSet sendQuery(String query){
 
 		ResultSet resultset = null;
@@ -130,6 +134,10 @@ public class DBConnector {
 		return resultset;
 	}
 
+	/**
+	 * Saves the lastID to the file .id
+	 * @param newID contains the latest ID
+	 */
 	public void lastIDChanged (int newID) {
 		if(lastID < newID) {
 			try {
@@ -142,7 +150,10 @@ public class DBConnector {
 			}
 		}
 	}
-
+	/**
+	 * Saves the lastTimestamp to the file .timestamp
+	 * @param newTimeStamp contains the latest Timestamp
+	 */
 	public void lastTimestampChanged (Timestamp newTimeStamp) {
 		if(lastTimestamp.before(newTimeStamp)) {
 			try {
@@ -157,6 +168,12 @@ public class DBConnector {
 		}
 	}
 
+	/**
+	 * Writes to a File or Creates the File
+	 * @param filePath Path to the File to write to
+	 * @param content String to be written to the File
+	 * @throws IOException
+	 */
 	private void writeToFile(String filePath, String content) throws IOException {
 
 		File file = new File(filePath);
