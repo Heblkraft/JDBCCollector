@@ -12,14 +12,24 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class CharlesQueryThread extends Thread{
+	//Worker Thread for the MainQueryThread
 	private final Logger logger = Logger.getLogger(CharlesQueryThread.class);
 	private final DBConnector dbConnector;
 
+	/**
+	 * <P>Executes the Query for the {@link MainQueryThread} in a new Thread</P>
+	 * @param name Name of the Thread
+	 * @param dbConnector DbConnector instance is needed
+	 */
 	public CharlesQueryThread(String name, DBConnector dbConnector) {
 		super(name);
 		this.dbConnector = dbConnector;
 	}
 
+	/**
+	 * <P>Implementation of the Runnable Interface for the Thread</P>
+	 * <P>Executes the Query when the Thread has been called</P>
+	 */
 	@Override
 	public void run() {
 		logger.debug("Polling");
@@ -37,6 +47,11 @@ public class CharlesQueryThread extends Thread{
 		}
 	}
 
+	/**
+	 * <P>Tests if the given Resultset is empty</P>
+	 * @param resultSet Resultset of the Query
+	 * @return <tt>true</tt> if the Resultset is empty
+	 */
 	private boolean isEmpty(ResultSet resultSet){
 		boolean returnvalue = false;
 		try {

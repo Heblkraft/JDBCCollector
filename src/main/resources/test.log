@@ -1,0 +1,113 @@
+15:04:11,846 DEBUG RestCaller:55 - HttpClient Method POST
+15:04:11,858 DEBUG RestCaller:110 - Building HttpRequest
+15:04:11,859  INFO DBConnector:68 - .id successfully created.
+15:04:11,861  INFO DBConnector:73 - .timestamp successfully created.
+15:04:11,863 DEBUG MainQueryThread:59 - Initalizing Thread Pool
+15:04:11,863 DEBUG MainQueryThread:21 - Setting Thread-pool-Size to 10
+15:04:11,863 DEBUG MainQueryThread:22 - Setting Pool-Interval to 1000
+15:04:11,864 DEBUG DBConnector:58 - Created DB Connector Instance
+15:04:11,864 DEBUG CharlesQueryThread:25 - Polling
+15:04:11,864 DEBUG DBConnector:91 - Building Connection to Database...
+15:04:11,866  INFO DBConnector:98 - Lost Connection to Database!
+15:04:12,867 DEBUG MainQueryThread:50 - Replacing Thread: SubThread #0 with new Thread
+15:04:13,869 DEBUG CharlesQueryThread:25 - Polling
+15:04:13,870 DEBUG DBConnector:91 - Building Connection to Database...
+15:04:13,870  INFO DBConnector:98 - Lost Connection to Database!
+15:04:14,872 DEBUG MainQueryThread:50 - Replacing Thread: SubThread #0 with new Thread
+15:04:15,874 DEBUG CharlesQueryThread:25 - Polling
+15:04:15,875 DEBUG DBConnector:91 - Building Connection to Database...
+15:04:15,875  INFO DBConnector:98 - Lost Connection to Database!
+15:04:16,875 DEBUG MainQueryThread:50 - Replacing Thread: SubThread #0 with new Thread
+15:04:17,878 DEBUG CharlesQueryThread:25 - Polling
+15:04:17,878 DEBUG DBConnector:91 - Building Connection to Database...
+15:04:17,878  INFO DBConnector:98 - Lost Connection to Database!
+15:04:18,879 DEBUG MainQueryThread:50 - Replacing Thread: SubThread #0 with new Thread
+15:04:19,885 DEBUG CharlesQueryThread:25 - Polling
+15:04:19,886 DEBUG DBConnector:91 - Building Connection to Database...
+15:04:19,886  INFO DBConnector:98 - Lost Connection to Database!
+15:04:20,889 DEBUG MainQueryThread:50 - Replacing Thread: SubThread #0 with new Thread
+15:04:21,890 DEBUG CharlesQueryThread:25 - Polling
+15:04:21,890 DEBUG DBConnector:91 - Building Connection to Database...
+15:04:21,890  INFO DBConnector:98 - Lost Connection to Database!
+15:19:12,126  INFO ConfigLoader:26 - Configuration loaded successfully
+15:20:07,385  INFO ConfigLoader:26 - Configuration loaded successfully
+15:20:15,974  INFO ConfigLoader:26 - Configuration loaded successfully
+15:21:45,154  INFO ConfigLoader:25 - Configuration loaded successfully.
+15:24:52,783  INFO ConfigLoader:25 - Configuration loaded successfully.
+15:25:04,082  INFO ConfigLoader:25 - Configuration loaded successfully.
+15:25:23,639  INFO ConfigLoader:25 - Configuration loaded successfully.
+15:30:56,513 DEBUG ConfigLoader:83 - FOUND!!
+15:30:56,518  INFO ConfigLoader:25 - Configuration loaded successfully.
+15:30:57,152 DEBUG RestCaller:55 - HttpClient Method POST
+15:30:57,168 DEBUG RestCaller:110 - Building HttpRequest
+15:30:57,171 DEBUG MainQueryThread:59 - Initalizing Thread Pool
+15:30:57,172 DEBUG MainQueryThread:21 - Setting Thread-pool-Size to 10
+15:30:57,172 DEBUG MainQueryThread:22 - Setting Pool-Interval to 1000
+15:30:57,172 DEBUG DBConnector:58 - Created DB Connector Instance
+15:30:57,173 DEBUG CharlesQueryThread:25 - Polling
+15:30:57,173 DEBUG DBConnector:91 - Building Connection to Database...
+15:30:57,175  INFO DBConnector:98 - Lost Connection to Database!
+15:30:58,173 DEBUG MainQueryThread:50 - Replacing Thread: SubThread #0 with new Thread
+15:30:59,174 DEBUG CharlesQueryThread:25 - Polling
+15:30:59,174 DEBUG DBConnector:91 - Building Connection to Database...
+15:30:59,174  INFO DBConnector:98 - Lost Connection to Database!
+15:31:00,177 DEBUG MainQueryThread:50 - Replacing Thread: SubThread #0 with new Thread
+15:31:01,185 DEBUG CharlesQueryThread:25 - Polling
+15:31:01,185 DEBUG DBConnector:91 - Building Connection to Database...
+15:31:01,185  INFO DBConnector:98 - Lost Connection to Database!
+15:31:02,189 DEBUG MainQueryThread:50 - Replacing Thread: SubThread #0 with new Thread
+15:31:12,675 DEBUG ConfigLoader:83 - FOUND!!
+15:31:12,678  INFO ConfigLoader:25 - Configuration loaded successfully.
+15:34:38,219  INFO ConfigLoader:25 - Configuration loaded successfully.
+15:34:51,635  INFO ConfigLoader:25 - Configuration loaded successfully.
+15:35:33,874  INFO ConfigLoader:25 - Configuration loaded successfully.
+15:35:55,560  INFO ConfigLoader:25 - Configuration loaded successfully.
+15:35:55,564  INFO MainClass:44 - increment.column, id
+15:35:55,564  INFO MainClass:44 - increment.startvalue, null
+15:35:55,564  INFO MainClass:44 - increment.id, id
+15:35:55,565  INFO MainClass:44 - query, select * from kurac;
+15:35:55,565  INFO MainClass:44 - rest.url, https://requestb.in/137r0pj1
+15:35:55,565  INFO MainClass:44 - poll.interval, 1000
+15:35:55,565  INFO MainClass:44 - dbconnection, jdbc:sqlserver://192.168.216.33:1433;DatabaseName=jdbc_test;user=jdbc_user;password=123;
+15:35:55,568  INFO MainClass:44 - rest.eventname, buildReport
+15:35:55,568  INFO MainClass:44 - max.threadpool, 10
+15:35:55,568  INFO MainClass:44 - increment.timestamp, null
+15:35:55,568  INFO MainClass:44 - increment.mode, id
+15:36:14,605  INFO ConfigLoader:25 - Configuration loaded successfully.
+22:17:50,493  INFO ConfigLoader:23 - Configuration loaded successfully.
+23:07:46,446  INFO ConfigLoader:23 - Configuration loaded successfully.
+23:08:56,650  INFO ConfigLoader:23 - Configuration loaded successfully.
+23:13:06,814  INFO ConfigLoader:23 - Configuration loaded successfully.
+23:21:17,078  INFO ConfigLoader:23 - Configuration loaded successfully.
+23:21:19,384  INFO ConfigLoader:23 - Configuration loaded successfully.
+23:21:21,857  INFO ConfigLoader:23 - Configuration loaded successfully.
+23:45:45,484 DEBUG MainClass:42 - 
+l Memory used.
+23:46:33,298 DEBUG MainClass:42 - 0 Memory used.
+23:46:45,592 DEBUG MainClass:42 - 0 Bytes of Memory used.
+23:53:19,156 DEBUG MainClass:42 - 0 Bytes of Memory used.
+23:53:21,872 DEBUG MainClass:42 - 0 Bytes of Memory used.
+23:53:24,790 DEBUG MainClass:42 - 0 Bytes of Memory used.
+23:59:39,402 DEBUG MainClass:42 - 0 Bytes of Memory used.
+00:00:56,126  INFO ConfigLoader:35 - Loaded configuration is valid.
+00:00:56,156 DEBUG MainClass:42 - 0 Bytes of Memory used.
+00:27:42,475 ERROR ConfigLoader:54 - Attribute increment.column is required but improperly/not set. 
+00:27:42,479 ERROR ConfigLoader:37 - Configuration could not be loaded. Check your .properties files. 
+00:27:42,480 DEBUG MainClass:42 - 1342200 Bytes of Memory used.
+00:27:51,469 ERROR ConfigLoader:54 - Attribute increment.column is required but improperly/not set. 
+00:27:51,475 ERROR ConfigLoader:37 - Configuration could not be loaded. Check your .properties files. 
+00:27:51,480 DEBUG MainClass:42 - 1342200 Bytes of Memory used.
+00:27:54,318 ERROR ConfigLoader:54 - Attribute increment.column is required but improperly/not set. 
+00:27:54,324 ERROR ConfigLoader:37 - Configuration could not be loaded. Check your .properties files. 
+00:27:54,324 DEBUG MainClass:42 - 1342200 Bytes of Memory used.
+00:28:26,270 ERROR ConfigLoader:54 - Attribute increment.column is required but improperly/not set. 
+00:28:26,273 ERROR ConfigLoader:37 - Configuration could not be loaded. Check your .properties files. 
+00:29:10,859 ERROR ConfigLoader:23 - Can not find or load ./dbconnection.profperties
+00:29:41,061  INFO ConfigLoader:35 - Loaded configuration is valid.
+00:29:41,148 DEBUG MainClass:42 - 0 Bytes of Memory used.
+00:32:10,651  INFO ConfigLoader:35 - Loaded configuration is valid.
+00:32:10,676 DEBUG MainClass:42 - 0 Bytes of Memory used.
+00:32:13,601  INFO ConfigLoader:35 - Loaded configuration is valid.
+00:32:13,631 DEBUG MainClass:42 - 0 Bytes of Memory used.
+00:32:16,435  INFO ConfigLoader:35 - Loaded configuration is valid.
+00:32:16,465 DEBUG MainClass:42 - 0 Bytes of Memory used.

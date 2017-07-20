@@ -7,12 +7,16 @@ import java.util.Collections;
 import java.util.List;
 import static jdbc.automic.configuration.ConfigLoader.config;
 
-class MainQueryThread extends Thread{
+public class MainQueryThread extends Thread{
 	private Logger logger = Logger.getLogger(MainQueryThread.class);
 	private final DBConnector dbconnector;
 	private final List<CharlesQueryThread> subThreads;
 	private boolean killFlag = false;
-	
+
+	/**
+	 * <P>Initalizes the Worker Thread Pool</P>
+	 * @param dbconnector DbConnector instance is needed
+	 */
 	public MainQueryThread(DBConnector dbconnector) {
 		super("MainThread");
 		this.dbconnector = dbconnector;
@@ -22,6 +26,10 @@ class MainQueryThread extends Thread{
 		logger.debug("Setting Pool-Interval to "+ config.get("poll.interval"));
 	}
 
+	/**
+	 * <P>Implementation of the runnable interface for the Thread</P>
+	 * <P>Starts the Worker Thread each Poll Interval</P>
+	 */
 	@Override
 	public void run() {
 		while(!killFlag) {
@@ -34,12 +42,18 @@ class MainQueryThread extends Thread{
 			}
 		}
 	}
-	
+
+	/**
+	 * <P>Kills the MainQueryThread</P>
+	 */
 	private void killThread() {
 		this.killFlag = true;
 		logger.debug("Shutting down Thread: "+ this.getName());
 	}
 
+	/**
+	 * <P>Starts a thread which is not alive and replaces the old thread with a new one</P>
+	 */
 	private void startThread(){
 		for(CharlesQueryThread thread : subThreads){
 			if(!thread.isAlive()){
@@ -54,7 +68,10 @@ class MainQueryThread extends Thread{
 		}
 	}
 
-	
+	/**
+	 * <P>Initalizes the Thread Pool with a given pool size</P>
+	 * @param number Number of threads in the thread Pool
+	 */
 	private void initThreadPool(int number) {
 		logger.debug("Initalizing Thread Pool");
 		for(int i = 0; i<number; i++) {
