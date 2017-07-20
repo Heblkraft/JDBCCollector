@@ -1,49 +1,45 @@
 package jdbc.automic.main;
 
 import jdbc.automic.configuration.ConfigLoader;
+import jdbc.automic.configuration.ConfigModel;
 import jdbc.automic.dbconnector.DBConnector;
 import jdbc.automic.restconnector.RestConnector;
 import sun.security.krb5.Config;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 import static jdbc.automic.configuration.ConfigLoader.config;
 
+import org.apache.log4j.Logger;
+
+
 public class MainClass {
+
+    private static final Logger logger = Logger.getLogger(MainClass.class);
 
     public static void main(String[] args) {
 
+        long beforeUsedMem=Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
 
-        if (args.length < 2) {
-            System.err.println("Only " + args.length + " arguments were given, but 2 are required");
+        if(args.length < 2){
+            logger.error(String.format("Only %n arguments were given, but 2 were expected. Exiting programm...", args.length));
             System.exit(-1);
         }
 
-        System.setErr(System.err);
-        System.setOut(System.out);
+        ConfigLoader.load(args[0], args[1]);
 
-        File dbConfig = new File(args[0]);
-        File restConfig = new File(args[1]);
+        //RestConnector restConnector = new RestConnector();
+        //DBConnector connector = new DBConnector(restConnector);
 
-        if (!dbConfig.exists() || !restConfig.exists()) {
-            System.err.println("Cannot find or load .properties file in directory " + dbConfig.getAbsolutePath());
-            System.exit(-1);
-        }
+        long afterUsedMem=Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
+        long actualMemUsed=afterUsedMem-beforeUsedMem;
 
-        System.out.println(Arrays.toString(args));
-        System.out.println(args.length);
+        logger.debug(String.format("%d Bytes of Memory used.", actualMemUsed));
 
-        ConfigLoader.load("./dbconnection.properties", "./restconnection.properties");
-
-        for (Map.Entry<String, String> entry : config.entrySet()) {
-            System.out.println(entry.getKey() + "     " + entry.getValue());
-        }
-
-        RestConnector restConnector = new RestConnector();
-        DBConnector connector = new DBConnector(restConnector);
     }
 }
