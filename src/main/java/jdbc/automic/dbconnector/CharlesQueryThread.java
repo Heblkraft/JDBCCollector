@@ -10,6 +10,7 @@ import org.json.simple.JSONObject;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 public class CharlesQueryThread extends Thread{
 	//Worker Thread for the MainQueryThread
@@ -39,7 +40,10 @@ public class CharlesQueryThread extends Thread{
 			try {
 				logger.debug("Change Detected");
 				JSONArray array = IRestAction.fetchData(rs);
-				if(config.get("increment.id") != null) dbConnector.lastIDChanged(Integer.parseInt(((JSONObject)array.get(array.size()-1)).get(config.get("increment.id")).toString())); //Returns the last Id in the Query and gives it to the dbConnector
+				//Next Statement gets last Item of the array and sends the increment item to the dbConnector
+				if(config.get("increment.mode").equals("id")) dbConnector.lastIDChanged(Integer.parseInt(((JSONObject)array.get(array.size()-1)).get(config.get("increment.column")).toString())); //Returns the last Id in the Query and gives it to the dbConnector
+				else dbConnector.lastTimestampChanged(Timestamp.valueOf(((JSONObject)array.get(array.size()-1)).get(config.get("increment.column")).toString()));
+
 				dbConnector.getRestConnector().getRestAction().action(array);
 			} catch (SQLException e) {
 				e.printStackTrace();

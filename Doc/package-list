@@ -1,0 +1,4 @@
+jdbc.automic.configuration
+jdbc.automic.dbconnector
+jdbc.automic.main
+jdbc.automic.restconnector
