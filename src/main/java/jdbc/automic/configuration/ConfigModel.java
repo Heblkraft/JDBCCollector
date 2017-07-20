@@ -9,7 +9,8 @@ public interface ConfigModel {
             {
                     "increment.column",
                     "increment.mode",
-                    "query"
+                    "query",
+                    "increment.file"
             };
 
     /**
@@ -18,7 +19,7 @@ public interface ConfigModel {
      */
     String[] optionalFieldModels =
             {
-                    "rest.eventname",
+                    "rest.eventtype",
                     "rest.url",
                     "rest.authentication.token",
                     "max.threadpool",
