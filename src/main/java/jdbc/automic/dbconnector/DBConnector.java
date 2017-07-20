@@ -8,7 +8,6 @@ import java.text.SimpleDateFormat;
 import java.time.Clock;
 import java.util.ArrayList;
 
-import com.microsoft.sqlserver.jdbc.SQLServerException;
 import jdbc.automic.restconnector.IRestAction;
 import jdbc.automic.restconnector.RestConnector;
 import org.apache.log4j.Logger;
