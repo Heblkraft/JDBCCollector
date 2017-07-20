@@ -110,22 +110,21 @@ public class DBConnector {
 		PreparedStatement ps = null;
 
 		try {
-
-			if(config.get("increment.id") != null){
-				query += " WHERE "+config.get("increment.id")+" > ?";
-
+			if(config.get("increment.mode").equals("id")){
+				query += " WHERE "+config.get("increment.column")+" > ?";
 				ps = getConnection().prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 				ps.setInt(1, lastID);
 			}
 
-			else if (config.get("increment.timestamp") != null){
-				query += " WHERE TIMESTAMP > ?";
+			else if (config.get("increment.mode").equals("timestamp")){
 
+				query += " WHERE "+config.get("increment.column")+" > ?";
 				ps = getConnection().prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 				ps.setTimestamp(1,lastTimestamp);
+				System.out.println(ps);
 			}
 			resultset = ps.executeQuery();
-
+			logger.debug(resultset);
 
 		} catch (SQLException e) {
 			conn = null;
@@ -155,6 +154,7 @@ public class DBConnector {
 	 * @param newTimeStamp contains the latest Timestamp
 	 */
 	public void lastTimestampChanged (Timestamp newTimeStamp) {
+		logger.debug("Timestamp changed to: "+ newTimeStamp);
 		if(lastTimestamp.before(newTimeStamp)) {
 			try {
 				lastTimestamp = newTimeStamp;
