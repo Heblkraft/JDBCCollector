@@ -1,5 +1,6 @@
 package jdbc.automic.restconnector;
 
+import jdbc.automic.dbconnector.DBConnector;
 import jdbc.automic.restconnector.RestCaller.Method;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
@@ -16,6 +17,9 @@ public class RestConnector implements IRestAction {
 
     private final RestCaller restCaller = new RestCaller(config.get("rest.url"), Method.POST);
 
+    /**
+     * Initializes the {@link RestCaller}
+     */
     //Initializes the RestCaller
     public RestConnector() {
         try {
@@ -29,10 +33,19 @@ public class RestConnector implements IRestAction {
         }
     }
 
+    /**
+     * <p>Getter for the {@link IRestAction} implementation</p>
+     * @return {@link IRestAction} for the {@link DBConnector}
+     */
     public IRestAction getRestAction() {
         return this;
     }
 
+    /**
+     * <P>Implementation of the {@link IRestAction}</P>
+     * <P>this Method gets called by {@link DBConnector}</P>
+     * @param array Changed Data
+     */
     //Implementations of the IRestAction witch gets called by DbConnector;
     @Override
     public void action(JSONArray array) {

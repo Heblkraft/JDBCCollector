@@ -12,7 +12,6 @@ import org.apache.http.NameValuePair;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -45,7 +44,12 @@ public class RestCaller {
 	private final List<Header> headerList;
 	private String body;
 	private CredentialsProvider credentialsProvider;
-	
+
+	/**
+	 * <P>Initalizes the RestCaller with the url and the method</P>
+	 * @param url URL to the Rest Service
+	 * @param method {@link RestCaller.Method} Set the Method for the {@link org.apache.http.HttpRequest}
+	 */
 	public RestCaller(String url, Method method) {
 		httpclient = HttpClients.createDefault();
 		this.url = url;
@@ -54,7 +58,11 @@ public class RestCaller {
 		setMethod(method);
 		logger.debug("HttpClient Method "+ method.name());
 	}
-	
+
+	/**
+	 * <P>Sets the Method for the {@link HttpRequestBase}</P>
+	 * @param method {@link RestCaller.Method}
+	 */
 	public void setMethod(Method method) {
 		switch(method) {
 		case GET:
@@ -65,22 +73,38 @@ public class RestCaller {
 			break;
 		}
 	}
-	
+
+	/**
+	 * <P>Adds Header to the HeaderList of the {@link HttpRequestBase}</P>
+	 * @param key Header Key
+	 * @param value Header Value
+	 */
 	//Adding Header to HeaderList
 	public void addHeader(String key, String value) {
 		this.addHeader(new BasicHeader(key, value));
 	}
-	
+
+	/**
+	 * <P>Adds Header to the HeaderList of the {@link HttpRequestBase}</P>
+	 * @param header Header to add
+	 */
 	public void addHeader(Header header) {
 		this.headerList.add(header);
 	}
 	//End Adding Header to HeaderList
-	
+
+	/**
+	 * <P>Adds Basic Authentication to the {@link HttpRequestBase}</P>
+	 */
 	//Adding Authentication to CredentialProvider
 	public void setAuthentication(String username, String password) {
 		setAuthentication(new UsernamePasswordCredentials(username, password));
 	}
-	
+
+	/**
+	 * <P>Adds the Credentials to the {@link HttpRequestBase}</P>
+	 * @param credentials {@link org.apache.http.auth.Credentials} this Credentials get added
+	 */
 	public void setAuthentication(Credentials credentials) {
 		this.credentialsProvider = new BasicCredentialsProvider();
 		this.credentialsProvider.setCredentials(AuthScope.ANY, credentials);
@@ -88,16 +112,31 @@ public class RestCaller {
 	//End Adding Authentification to CredentialProvider
 	
 	//Adding Attributes to nameValueList
+
+	/**
+	 * Appends Key-Value-Pair to the body of the {@link HttpRequestBase}
+	 * @param key for the entry
+	 * @param value for the entry
+	 */
 	public void appendAttributes(String key, String value) {
 		appendAttributes(new BasicNameValuePair(key, value));
 	}
-	
+
+	/**
+	 * <P>Appends Key-Value-Pair to the body of the {@link HttpRequestBase}</P>
+	 * @param nvp {@link NameValuePair}
+	 */
 	public void appendAttributes(NameValuePair nvp) {
 		nameValueList.add(nvp);
 	}
 	//End Adding Attributes to nameValueList
 
 
+	/**
+	 * <P>Builds the {@link org.apache.http.client.HttpClient}</P>
+	 * <P>Only call this if the Header or the Credentials have changed</P>
+	 * <P>Note: this Method already calls {@link RestCaller#addParametersToRequest()}</P>
+	 */
 	//if Authentification or header or Parameters changed you need to rebuild the client
 	public void build() throws UnsupportedEncodingException, URISyntaxException {
 		//Adding Credentials to HttpClient & Adding Headers to HttpClient
@@ -109,7 +148,11 @@ public class RestCaller {
 		addParametersToRequest();
 		logger.debug("Building HttpRequest");
 	}
-	
+
+	/**
+	 * <P>Adds all the Parameters to the Request</P>
+	 * <P>Only call this if the Parameters have changed</P>
+	 */
 	public void addParametersToRequest() throws URISyntaxException, UnsupportedEncodingException {
 		//Adding Parameters to Http Request
 		if(httpRequestBase instanceof HttpGet) {
@@ -121,24 +164,38 @@ public class RestCaller {
 				((HttpPost)httpRequestBase).setEntity(new ByteArrayEntity(body.getBytes()));
 		}
 	}
-	
+
+	/**
+	 * Sets the Body for an Http Post Request
+	 */
 	//Sets Body for Post HttpRequest
-	public void setBody(String s) {
-		this.body = s;
+	public void setBody(String body) {
+		this.body = body;
 	}
-	
+
+	/**
+	 * <P>Executes the built {@link HttpRequestBase}</P>
+	 * <P>To get the Response call {@link RestCaller#getResponse()}</P>
+	 */
 	//Executes the HttpRequest
 	public void execute() throws IOException {
 		if(httpcontext != null) response = httpclient.execute(httpRequestBase,httpcontext);
 		else response = httpclient.execute(httpRequestBase);
 		logger.debug("Sending HttpRequest");
 	}
-	
+
+	/**
+	 * Returns the {@link org.apache.http.HttpResponse} from the previous execute
+	 * @return {@link InputStream} of the returned Response
+	 */
 	//Returnes the Response from the previous Execution
 	public InputStream getResponse() throws UnsupportedOperationException, IOException {
 		return response.getEntity().getContent();
 	}
-	
+
+	/**
+	 * <P>After reading the Response you have to call this Method</P>
+	 */
 	//After reading the response you need the close it
 	public void closeResponse() {
 		try {
@@ -150,7 +207,10 @@ public class RestCaller {
 		}
 		logger.debug("Closing the HttpResponse");
 	}
-	
+
+	/**
+	 * <P>After working with the RestCaller you need to close it</P>
+	 */
 	//if you finished working with the client you need to close the client
 	public void closeClient() {
 		try {
