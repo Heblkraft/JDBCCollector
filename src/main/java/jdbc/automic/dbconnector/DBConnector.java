@@ -38,10 +38,10 @@ public class DBConnector {
 
             initTempFiles();
 
-            if(config.get("increment.id") != null) {
+            if(config.get("increment.mode").equals("id")) {
                 lastID = Integer.parseInt(Files.readAllLines(Paths.get(VIA_ID)).get(0));
             }
-            else if(config.get("increment.timestamp") != null) {
+            else if(config.get("increment.mode").equals("timestamp")) {
                 lastTimestamp = Timestamp.valueOf(Files.readAllLines(Paths.get(".timestamp")).get(0));
             }
 		}
@@ -105,10 +105,8 @@ public class DBConnector {
 	 * @return a resultset is returned from the executed Query
 	 */
 	public ResultSet sendQuery(String query){
-
 		ResultSet resultset = null;
 		PreparedStatement ps = null;
-
 		try {
 			if(config.get("increment.mode").equals("id")){
 				query += " WHERE "+config.get("increment.column")+" > ?";
@@ -117,14 +115,11 @@ public class DBConnector {
 			}
 
 			else if (config.get("increment.mode").equals("timestamp")){
-
 				query += " WHERE "+config.get("increment.column")+" > ?";
 				ps = getConnection().prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 				ps.setTimestamp(1,lastTimestamp);
-				System.out.println(ps);
 			}
 			resultset = ps.executeQuery();
-			logger.debug(resultset);
 
 		} catch (SQLException e) {
 			conn = null;
@@ -158,9 +153,7 @@ public class DBConnector {
 		if(lastTimestamp.before(newTimeStamp)) {
 			try {
 				lastTimestamp = newTimeStamp;
-				String content = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS.ms").format(lastTimestamp);
-				writeToFile(VIA_TIMESTAMP, content);
-
+				writeToFile(VIA_TIMESTAMP, lastTimestamp.toString());
 			} catch (IOException e) {
 				logger.error("Can't write to file .timestamp");
 				logger.trace("",e);

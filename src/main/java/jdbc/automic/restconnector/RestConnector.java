@@ -8,6 +8,10 @@ import org.json.simple.JSONObject;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 
 import static jdbc.automic.configuration.ConfigLoader.config;
 
@@ -51,16 +55,25 @@ public class RestConnector implements IRestAction {
     public void action(JSONArray array) {
         for (Object obj : array) {
             JSONObject jsonSent = new JSONObject();
-            jsonSent.put("values", (JSONObject) obj);
-            jsonSent.put("eventname", config.get("rest.eventname"));
+            jsonSent.put("values", obj);
+            jsonSent.put("eventtype", config.get("rest.eventtype"));
+            if(config.get("increment.mode").equals("timestamp")){
+                Timestamp timestamp = Timestamp.valueOf(((JSONObject)obj).get(config.get("increment.column")).toString());
+                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S");
+                dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+                jsonSent.put("eventtime", dateFormat.format(timestamp));
+            }
             restCaller.setBody(jsonSent.toString());
             try {
+                restCaller.addParametersToRequest();
                 restCaller.execute();
-                restCaller.closeResponse();
                 logger.debug("RestCaller sent Request: "+ jsonSent.toString());
+                restCaller.closeResponse();
             } catch (IOException e) {
                 logger.error("Cannot connect to Rest Service: "+ config.get("rest.url"));
                 logger.trace("", e);
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
             }
 
         }
