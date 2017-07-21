@@ -36,8 +36,8 @@ public final class ConfigLoader implements ConfigModel {
      * is loaded a quick status check is run that determines whether the program is allowed
      * to be further executed.
      *
-     * @param baseConfigFile
-     * @param restConfigFile
+     * @param baseConfigFile Path to dbconnection.properties file
+     * @param restConfigFile Path to the restconnection.properties file
      */
     public static void load(String baseConfigFile, String restConfigFile){
 
@@ -146,6 +146,10 @@ public final class ConfigLoader implements ConfigModel {
         }
 
         return configLines;
+    }
+
+    public static void alterProperty() {
+
     }
 }
 
