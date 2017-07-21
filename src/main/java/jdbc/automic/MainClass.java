@@ -1,16 +1,11 @@
-package jdbc.automic.main;
+package jdbc.automic;
 
 import jdbc.automic.configuration.ConfigLoader;
 import jdbc.automic.dbconnector.DBConnector;
 import jdbc.automic.restconnector.RestConnector;
 import org.apache.log4j.Logger;
 
-import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
-
-public class MainClass {
+public class MainClass{
     private static final Logger logger = Logger.getLogger(MainClass.class);
 
     /**

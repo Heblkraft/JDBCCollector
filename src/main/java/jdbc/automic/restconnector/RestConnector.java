@@ -5,6 +5,8 @@ import jdbc.automic.restconnector.RestCaller.Method;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -15,6 +17,7 @@ import java.util.TimeZone;
 
 import static jdbc.automic.configuration.ConfigLoader.config;
 
+@Service
 public class RestConnector implements IRestAction {
     //Finished
     Logger logger = Logger.getLogger(RestConnector.class);
@@ -35,6 +38,10 @@ public class RestConnector implements IRestAction {
             logger.error("Cannot create Request Header");
             logger.trace("", e);
         }
+    }
+
+    public String helloWorld(){
+        return "Hello World";
     }
 
     /**
