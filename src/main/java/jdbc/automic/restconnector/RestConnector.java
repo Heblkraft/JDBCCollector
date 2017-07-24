@@ -37,10 +37,6 @@ public class RestConnector implements IRestAction {
         }
     }
 
-    public String helloWorld(){
-        return "Hello World";
-    }
-
     /**
      * <p>Getter for the {@link IRestAction} implementation</p>
      * @return {@link IRestAction} for the {@link DBConnector}
@@ -66,6 +62,7 @@ public class RestConnector implements IRestAction {
                 DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S");
                 dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
                 jsonSent.put("eventtime", dateFormat.format(timestamp));
+                ((JSONObject)jsonSent.get("values")).remove(config.get("increment.column"));
             }
             restCaller.setBody(jsonSent.toString());
             try {
