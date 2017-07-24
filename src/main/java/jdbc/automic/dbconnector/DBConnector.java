@@ -1,18 +1,14 @@
 package jdbc.automic.dbconnector;
-import java.io.*;
-import java.net.URL;
+import jdbc.automic.restconnector.RestConnector;
+import org.apache.log4j.Logger;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 
-import jdbc.automic.restconnector.RestConnector;
-import org.apache.log4j.Logger;
 import static jdbc.automic.configuration.ConfigLoader.config;
 
 public class DBConnector {
@@ -98,56 +94,12 @@ public class DBConnector {
 		return null;
 	}
 
-
-	public static <T extends Object> List<Class<T>> findClassesImplementing(Class<T> cls) throws IOException {
-		List<Class<T>> classes = new ArrayList<Class<T>>();
-
-		for (URL root : Collections.list(Thread.currentThread().getContextClassLoader().getResources(""))) {
-			for (File file : findFiles(new File(root.getFile()), ".+\\.jar$")) {
-				JarFile jarFile = new JarFile(file);
-				for (JarEntry jarEntry : Collections.list(jarFile.entries())) {
-					String name = jarEntry.getName();
-					if (name.endsWith(".class")) try {
-						Class<?> found = Class.forName(name.replace("/", ".").replaceAll("\\.class$", ""));
-						if (cls.isAssignableFrom(found)) {
-							classes.add((Class<T>) found);
-						}
-					} catch (Throwable ignore) {
-						// No real class file, or JAR not in classpath, or missing links.
-					}
-				}
-			}
-		}
-
-		return classes;
-	}
-
-	public static List<File> findFiles(File directory, final String pattern) throws IOException {
-		File[] files = directory.listFiles(new FileFilter() {
-			public boolean accept(File file) {
-				return file.isDirectory() || file.getName().matches(pattern);
-			}
-		});
-
-		List<File> found = new ArrayList<File>(files.length);
-
-		for (File file : files) {
-			if (file.isDirectory()) {
-				found.addAll(findFiles(file, pattern));
-			} else {
-				found.add(file);
-			}
-		}
-
-		return found;
-	}
-
 	/**
 	 * Adds a prepared Statement to a SQL_Query and Executes it
 	 * @param query contains the sql-query command
 	 * @return a resultset is returned from the executed Query
 	 */
-	public ResultSet sendQuery(String query){
+	ResultSet sendQuery(String query){
 		ResultSet resultset = null;
 		PreparedStatement ps = null;
 		try {
@@ -175,7 +127,7 @@ public class DBConnector {
 	 * Saves the lastID to the file .id
 	 * @param newID contains the latest ID
 	 */
-	public void lastIDChanged (int newID) {
+	void lastIDChanged (int newID) {
 		if(lastID < newID) {
 			try {
 				lastID = newID;
@@ -191,7 +143,7 @@ public class DBConnector {
 	 * Saves the lastTimestamp to the file .timestamp
 	 * @param newTimeStamp contains the latest Timestamp
 	 */
-	public void lastTimestampChanged (Timestamp newTimeStamp) {
+	void lastTimestampChanged (Timestamp newTimeStamp) {
 		logger.debug("Timestamp changed to: "+ newTimeStamp);
 		if(lastTimestamp.before(newTimeStamp)) {
 			try {
@@ -208,7 +160,6 @@ public class DBConnector {
 	 * Writes to a File or Creates the File
 	 * @param filePath Path to the File to write to
 	 * @param content String to be written to the File
-	 * @throws IOException
 	 */
 	private void writeToFile(String filePath, String content) throws IOException {
 
@@ -225,7 +176,7 @@ public class DBConnector {
 		logger.info("Written to File " + filePath);
 	}
 
-	public RestConnector getRestConnector(){
+	RestConnector getRestConnector(){
 		return this.restConnector;
 	}
 }

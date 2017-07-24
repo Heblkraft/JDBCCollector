@@ -147,10 +147,6 @@ public final class ConfigLoader implements ConfigModel {
 
         return configLines;
     }
-
-    public static void alterProperty() {
-
-    }
 }
 
 
