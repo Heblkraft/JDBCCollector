@@ -27,7 +27,7 @@ public class RestConnector implements IRestAction {
     //Initializes the RestCaller
     public RestConnector() {
         try {
-            restCaller.addHeader("Authorization", "73f62553-bec9-46e9-b89c-9ab14cd18277");
+            restCaller.addHeader("Authorization", config.get("rest.authorization"));
             restCaller.addHeader("Content-Type", "application/json");
             restCaller.addHeader("Accept", "application/json");
             restCaller.build();
