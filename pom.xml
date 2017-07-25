@@ -58,19 +58,16 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
                     <excludes>
+                        <exclude>*.sql</exclude>
                         <exclude>.*</exclude>
                         <exclude>*.log</exclude>
-                        <exclude>*.sql</exclude>
                     </excludes>
                     <archive>
                         <manifest>
-                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                            <addClasspath>false</addClasspath>
+                            <addClasspath>true</addClasspath>
                             <mainClass>jdbc.automic.MainClass</mainClass>
+                            <classpathPrefix>dependency-jars/</classpathPrefix>
                         </manifest>
-                        <manifestEntries>
-                            <Class-Path>.</Class-Path>
-                        </manifestEntries>
                     </archive>
                 </configuration>
             </plugin>
@@ -88,6 +85,7 @@
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
+                            <!-- exclude junit, we need runtime dependency only -->
                             <includeScope>runtime</includeScope>
                             <outputDirectory>${project.build.directory}/dependency-jars/</outputDirectory>
                         </configuration>

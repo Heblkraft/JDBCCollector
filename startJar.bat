@@ -1,3 +1,1 @@
-REM java -cp "dependency-jars/log4j-1.2.17.jar;dependency-jars/httpclient-4.3.6.jar;dependency-jars/httpcore-4.3.3.jar;dependency-jars/commons-logging-1.1.3.jar;dependency-jars/commons-codec-1.6.jar;dependency-jars/sqljdbc4-4.0.jar;dependency-jars/hamcrest-core-1.1.jar" -jar .\target\Collector.jar .\dbconnection.properties .\restconnection.properties
-
 java -cp "/target/dependency-jars/*" -jar target\Collector.jar .\dbconnection.properties .\restconnection.properties
