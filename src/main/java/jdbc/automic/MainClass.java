@@ -5,6 +5,9 @@ import jdbc.automic.dbconnector.DBConnector;
 import jdbc.automic.restconnector.RestConnector;
 import org.apache.log4j.Logger;
 
+import java.net.URL;
+import java.net.URLClassLoader;
+
 public class MainClass{
     private static final Logger logger = Logger.getLogger(MainClass.class);
 
@@ -14,6 +17,14 @@ public class MainClass{
      * @param args
      */
     public static void main(String[] args) {
+        ClassLoader cl = ClassLoader.getSystemClassLoader();
+
+        URL[] urls = ((URLClassLoader)cl).getURLs();
+
+        for(URL url: urls){
+            System.out.println(url.getFile());
+        }
+
         if(args.length < 2){
             logger.error(String.format("Only %n arguments were given, but 2 were expected. Exiting programm...", args.length));
             System.exit(-1);
