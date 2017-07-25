@@ -25,6 +25,6 @@ public interface ConfigModel {
                     "max.threadpool",
                     "max.entries",
                     "poll.interval"
-    };
+            };
 
 }

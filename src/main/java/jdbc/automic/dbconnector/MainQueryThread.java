@@ -35,6 +35,7 @@ public class MainQueryThread extends Thread{
 		while(!killFlag) {
 			startThread();
 			try {
+				System.gc();
 				Thread.sleep(Integer.parseInt(config.get("poll.interval")));
 			} catch (InterruptedException e) {
 				logger.error("Thread "+ this.getName()+ " is shutting down");
@@ -48,6 +49,11 @@ public class MainQueryThread extends Thread{
 	 */
 	private void killThread() {
 		this.killFlag = true;
+		try {
+			this.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		logger.debug("Shutting down Thread: "+ this.getName());
 	}
 

@@ -36,8 +36,8 @@ public final class ConfigLoader implements ConfigModel {
      * is loaded a quick status check is run that determines whether the program is allowed
      * to be further executed.
      *
-     * @param baseConfigFile
-     * @param restConfigFile
+     * @param baseConfigFile Path to dbconnection.properties file
+     * @param restConfigFile Path to the restconnection.properties file
      */
     public static void load(String baseConfigFile, String restConfigFile){
 
@@ -46,13 +46,13 @@ public final class ConfigLoader implements ConfigModel {
             System.exit(-1);
         }
 
-        if(!Files.exists(Paths.get(baseConfigFile))){
-            logger.error(String.format("Can not find or load %s", baseConfigFile));
+        if(!Files.exists(Paths.get(restConfigFile))){
+            logger.error(String.format("Can not find or load %s", restConfigFile));
             System.exit(-1);
         }
 
-        config.putAll(readConfigurationFile("dbconnection.properties"));
-        config.putAll(readConfigurationFile("restconnection.properties"));
+        config.putAll(readConfigurationFile(baseConfigFile));
+        config.putAll(readConfigurationFile(restConfigFile));
 
         if(assertConfigurationStatus()) logger.info("Loaded configuration is valid.");
         else {

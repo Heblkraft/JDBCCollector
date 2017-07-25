@@ -9,28 +9,37 @@
     <version>1.0</version>
     <properties>
         <jdk.version>1.8</jdk.version>
+        <spring.boot.starter.version>1.5.4.RELEASE</spring.boot.starter.version>
+        <log4j.version>1.2.17</log4j.version>
+        <httpcomponents.version>4.3.6</httpcomponents.version>
+        <microsoft.jdbc.verison>4.0</microsoft.jdbc.verison>
+        <json-simple.version>1.1.1</json-simple.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
-            <version>1.2.17</version>
+            <version>${log4j.version}</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>4.3.6</version>
+            <version>${httpcomponents.version}</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.microsoft.sqlserver</groupId>
             <artifactId>sqljdbc4</artifactId>
-            <version>4.0</version>
+            <version>${microsoft.jdbc.verison}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>
             <artifactId>json-simple</artifactId>
-            <version>1.1.1</version>
+            <version>${json-simple.version}</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
     <build>
@@ -47,21 +56,51 @@
                 </configuration>
             </plugin>
 
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.0.1</version>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <!-- here the phase you need -->
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>Properties</directory>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
             <!-- Make this jar executable -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
                     <excludes>
-                        <exclude>**/.id</exclude>
-                        <exclude>**/.timestamp</exclude>
+                        <exclude>*.sql</exclude>
+                        <exclude>.*</exclude>
+                        <exclude>*.log</exclude>
+                        <exclude>dbconnection.properties</exclude>
+                        <exclude>restconnection.properties</exclude>
                     </excludes>
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>jdbc.automic.main.MainClass</mainClass>
+                            <mainClass>jdbc.automic.MainClass</mainClass>
                             <classpathPrefix>dependency-jars/</classpathPrefix>
                         </manifest>
+                        <manifestEntries>
+                            <Class-Path>dependency-jars/jdbc.jar</Class-Path>
+                        </manifestEntries>
                     </archive>
                 </configuration>
             </plugin>
@@ -86,7 +125,6 @@
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
     </build>
 </project>

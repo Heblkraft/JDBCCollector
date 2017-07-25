@@ -58,6 +58,10 @@ public class CharlesQueryThread extends Thread{
 	 */
 	private boolean isEmpty(ResultSet resultSet){
 		boolean returnvalue = false;
+		if(resultSet == null){
+			logger.error(config.get("increment.column") + " does not exist");
+			System.exit(-2);
+		}
 		try {
 			if(!resultSet.next()){
 				returnvalue= true;

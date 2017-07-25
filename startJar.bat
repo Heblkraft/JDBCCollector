@@ -1,0 +1,1 @@
+java -cp "/target/dependency-jars/*" -jar target\Collector.jar .\dbconnection.properties .\restconnection.properties
