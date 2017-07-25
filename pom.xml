@@ -18,11 +18,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-            <version>${spring.boot.starter.version}</version>
-        </dependency>
-        <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>${log4j.version}</version>
@@ -62,12 +57,20 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
+                    <excludes>
+                        <exclude>.*</exclude>
+                        <exclude>*.log</exclude>
+                        <exclude>*.sql</exclude>
+                    </excludes>
                     <archive>
                         <manifest>
-                            <addClasspath>true</addClasspath>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addClasspath>false</addClasspath>
                             <mainClass>jdbc.automic.MainClass</mainClass>
-                            <classpathPrefix>dependency-jars/</classpathPrefix>
                         </manifest>
+                        <manifestEntries>
+                            <Class-Path>.</Class-Path>
+                        </manifestEntries>
                     </archive>
                 </configuration>
             </plugin>
@@ -85,7 +88,6 @@
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                            <!-- exclude junit, we need runtime dependency only -->
                             <includeScope>runtime</includeScope>
                             <outputDirectory>${project.build.directory}/dependency-jars/</outputDirectory>
                         </configuration>
