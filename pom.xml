@@ -21,21 +21,25 @@
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>${log4j.version}</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>${httpcomponents.version}</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.microsoft.sqlserver</groupId>
             <artifactId>sqljdbc4</artifactId>
             <version>${microsoft.jdbc.verison}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>
             <artifactId>json-simple</artifactId>
             <version>${json-simple.version}</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
     <build>
@@ -52,6 +56,30 @@
                 </configuration>
             </plugin>
 
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.0.1</version>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <!-- here the phase you need -->
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>Properties</directory>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
             <!-- Make this jar executable -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -61,6 +89,8 @@
                         <exclude>*.sql</exclude>
                         <exclude>.*</exclude>
                         <exclude>*.log</exclude>
+                        <exclude>dbconnection.properties</exclude>
+                        <exclude>restconnection.properties</exclude>
                     </excludes>
                     <archive>
                         <manifest>
@@ -68,6 +98,9 @@
                             <mainClass>jdbc.automic.MainClass</mainClass>
                             <classpathPrefix>dependency-jars/</classpathPrefix>
                         </manifest>
+                        <manifestEntries>
+                            <Class-Path>dependency-jars/jdbc.jar</Class-Path>
+                        </manifestEntries>
                     </archive>
                 </configuration>
             </plugin>
@@ -92,7 +125,6 @@
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
     </build>
 </project>
