@@ -9,7 +9,6 @@
     <version>1.0</version>
     <properties>
         <jdk.version>1.8</jdk.version>
-        <spring.boot.starter.version>1.5.4.RELEASE</spring.boot.starter.version>
         <log4j.version>1.2.17</log4j.version>
         <httpcomponents.version>4.3.6</httpcomponents.version>
         <microsoft.jdbc.verison>4.0</microsoft.jdbc.verison>
@@ -33,7 +32,7 @@
             <groupId>com.microsoft.sqlserver</groupId>
             <artifactId>sqljdbc4</artifactId>
             <version>${microsoft.jdbc.verison}</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>
