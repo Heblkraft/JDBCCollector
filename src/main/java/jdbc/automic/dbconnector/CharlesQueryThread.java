@@ -35,6 +35,7 @@ public class CharlesQueryThread extends Thread{
 	public void run() {
 		logger.debug("Polling");
 		ResultSet rs = dbConnector.sendQuery(config.get("query"));
+		if(rs == null) return;
 		if(isEmpty(rs)) dbConnector.lastIDChanged(0);
 		else {
 			try {

@@ -88,7 +88,7 @@ public class DBConnector {
             return conn;
 		}catch (SQLException e) {
 			conn = null;
-			logger.info("Connection could not be established");
+			logger.error("Connection could not be established");
 			logger.trace(e.getMessage());
 		}
 		return null;
@@ -103,19 +103,18 @@ public class DBConnector {
 		ResultSet resultset = null;
 		PreparedStatement ps = null;
 		try {
-			if(config.get("increment.mode").equals("id")){
-				query += " WHERE "+config.get("increment.column")+" > ?";
-				ps = getConnection().prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-				ps.setInt(1, lastID);
+			if(getConnection() != null) {
+				if (config.get("increment.mode").equals("id")) {
+					query += " WHERE " + config.get("increment.column") + " > ?";
+					ps = getConnection().prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+					ps.setInt(1, lastID);
+				} else if (config.get("increment.mode").equals("timestamp")) {
+					query += " WHERE " + config.get("increment.column") + " > ?";
+					ps = getConnection().prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+					ps.setTimestamp(1, lastTimestamp);
+				}
+				resultset = ps.executeQuery();
 			}
-
-			else if (config.get("increment.mode").equals("timestamp")){
-				query += " WHERE "+config.get("increment.column")+" > ?";
-				ps = getConnection().prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-				ps.setTimestamp(1,lastTimestamp);
-			}
-			resultset = ps.executeQuery();
-
 		} catch (SQLException e) {
 			conn = null;
 		}
