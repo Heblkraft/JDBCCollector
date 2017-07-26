@@ -1,0 +1,4 @@
+- run mvn clean compile package
+- edit manifest file in Collector.jar
+	- change dependency-jars\sqljdbc4-4.0.jar to lib\jdbc.jar
+- move dependency-jars\sqljdbc4-4.0.jar to lib\jdbc.jar
