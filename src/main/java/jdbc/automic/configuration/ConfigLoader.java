@@ -7,9 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.ListIterator;
+import java.util.*;
 
 public final class ConfigLoader implements ConfigModel {
 
@@ -27,7 +25,7 @@ public final class ConfigLoader implements ConfigModel {
     /**
      * {@link org.apache.commons.logging.impl.Log4JLogger}
      */
-    private static Logger logger = Logger.getLogger(ConfigLoader.class);
+    private static final Logger logger = Logger.getLogger(ConfigLoader.class);
 
 
     /**
@@ -61,10 +59,11 @@ public final class ConfigLoader implements ConfigModel {
         }
     }
 
+
     /**
      * This method determines whether program gets further executed or not.
      * It takes the list of required properties that should be defined in the configuration file from the {@link ConfigModel} Interface
-     * and loops through the loaded configuration.
+     * and loops through the loaded configuration whilst also checking their types.
      * <p>
      * Missing properties get saved to a list which is later used to display the
      * error messages.
@@ -73,21 +72,34 @@ public final class ConfigLoader implements ConfigModel {
      */
     private static boolean assertConfigurationStatus(){
 
-        LinkedList<String> ls = new LinkedList<>();
+        ArrayList<String> errors = new ArrayList<>();
 
-        for(String s : requiredFieldModels){
-            if(config.get(s) == null) ls.add(s);
-        }
+        for(String requiredField : requiredFieldModels){
 
-        if(!ls.isEmpty()){
-            ListIterator li = ls.listIterator();
+            String[] pair = requiredField.split("\\|");
 
-            while(li.hasNext()){
-                logger.error(String.format("Attribute %s is required but improperly/not set. ", li.next()));
+            if(config.get(pair[0]) == null){
+                errors.add(String.format("Attribute %s of type %s is required but not set", pair[0], pair[1]));
+                continue;
             }
 
+            if(pair[1].equals("numeric")){
+                for(char c : config.get(pair[0]).toCharArray()){
+                    if(!Character.isDigit(c)){
+                        errors.add(String.format("Attribute %s is not of type %s", pair[0], pair[1]));
+                        break;
+                    }
+                }
+            }
+        }
+
+        if(!errors.isEmpty()){
+            for(String errorMessage : errors){
+                logger.error(errorMessage);
+            }
             return false;
         }
+
         return true;
     }
 
