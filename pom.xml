@@ -40,6 +40,11 @@
             <version>${json-simple.version}</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>com.mockrunner</groupId>
+            <artifactId>mockrunner-all</artifactId>
+            <version>1.1.2</version>
+        </dependency>
     </dependencies>
     <build>
         <finalName>Collector</finalName>
