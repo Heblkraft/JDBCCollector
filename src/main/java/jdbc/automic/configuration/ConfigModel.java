@@ -2,15 +2,16 @@ package jdbc.automic.configuration;
 
 public interface ConfigModel {
 
+
     /**
      * Represents the required properties which have to be set in the .properties files.
      */
     String[] requiredFieldModels =
             {
-                    "increment.column",
-                    "increment.mode",
-                    "query",
-                    "increment.file"
+                    "increment.column|text",
+                    "increment.mode|text",
+                    "query|text",
+                    "increment.file|text"
             };
 
     /**
@@ -19,12 +20,12 @@ public interface ConfigModel {
      */
     String[] optionalFieldModels =
             {
-                    "rest.eventname",
-                    "rest.url",
-                    "rest.authentication.token",
-                    "max.threadpool",
-                    "max.entries",
-                    "poll.interval"
+                    "rest.eventtype|text",
+                    "rest.url|text",
+                    "rest.authentication.token|text",
+                    "max.threadpool|numeric",
+                    "max.entries|numeric",
+                    "poll.interval|numeric"
             };
 
 }
