@@ -12,10 +12,6 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 
 public class RestConnectorTest {
-    @Test
-    public void testtest() {
-
-    }
 
     @BeforeClass
     public static void loadConfig() {
