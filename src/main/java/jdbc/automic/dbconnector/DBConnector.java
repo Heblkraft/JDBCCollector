@@ -42,8 +42,6 @@ public class DBConnector {
 
             String inFile = Files.readAllLines(Paths.get(CURRENT_FILE)).get(0);
 
-
-
             if(config.get("increment.mode").equals("id")) lastID = Integer.parseInt(inFile);
             else if(config.get("increment.mode").equals("timestamp")) lastTimestamp = Timestamp.valueOf(inFile);
 		}
@@ -61,16 +59,21 @@ public class DBConnector {
 	/**
 	 * <p>Creating idFile or timestampFile</p>
 	 */
-	private void initTempFiles(){
+	private boolean initTempFiles(){
 		try{
 			if(!new File(CURRENT_FILE).exists()){
 				Files.write(Paths.get(CURRENT_FILE), config.get("increment.mode").equals("timestamp") ? TIMESTAMP_START_VALUE.getBytes() : Integer.toString(ID_START_VALUE).getBytes());
 				logger.info(CURRENT_FILE+ " successfully created");
-			}else logger.debug(CURRENT_FILE+" already exists");
+				return true;
+			}else {
+				logger.debug(CURRENT_FILE+" already exists");
+				return false;
+			}
 		} catch (IOException e){
 			logger.error("Can't create File: "+CURRENT_FILE);
 			logger.trace("",e);
 		}
+		return false;
 	}
 
 	 /**
@@ -127,6 +130,7 @@ public class DBConnector {
 	 * @param newID contains the latest ID
 	 */
 	void lastIDChanged (int newID) {
+		logger.debug("Id changed to: "+ newID);
 		if(lastID < newID) {
 			try {
 				lastID = newID;
@@ -161,7 +165,6 @@ public class DBConnector {
 	 * @param content String to be written to the File
 	 */
 	private void writeToFile(String filePath, String content) throws IOException {
-
 		File file = new File(filePath);
 		FileOutputStream fos = new FileOutputStream(file);
 
