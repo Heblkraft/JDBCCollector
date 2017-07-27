@@ -87,7 +87,6 @@ public class RestConnectorTest {
             JSONArray expectedArray = setupExpectedSendRequestArray();
 
             Assert.assertEquals(expectedArray, sentArray);
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
