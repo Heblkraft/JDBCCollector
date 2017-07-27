@@ -1,11 +1,12 @@
 package jdbc.automic.restconnector;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import static jdbc.automic.configuration.ConfigLoader.config;
 
 public interface IRestAction {
@@ -15,8 +16,9 @@ public interface IRestAction {
 	 * <P>Gets called if there is a change in the Datasource</P>
 	 * <P>Gets implemented by {@link RestConnector}</P>
 	 * @param array Changed Data
+	 * @return Returns the JSONArray which the RestConnector sent to the Rest Endpoint
 	 */
-	void action(JSONArray array);
+	JSONArray action(JSONArray array);
 
 	/**
 	 * <P>Helps the Datasource to convert the Resultset into an JSONArray</P>

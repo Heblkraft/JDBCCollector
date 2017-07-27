@@ -52,7 +52,9 @@ public class RestConnector implements IRestAction {
      */
     //Implementations of the IRestAction witch gets called by DbConnector;
     @Override
-    public void action(JSONArray array) {
+    public JSONArray action(JSONArray array) {
+        JSONArray returnArray = new JSONArray();
+
         for (Object obj : array) {
             JSONObject jsonSent = new JSONObject();
             jsonSent.put("values", obj);
@@ -64,6 +66,7 @@ public class RestConnector implements IRestAction {
                 jsonSent.put("eventtime", dateFormat.format(timestamp));
                 ((JSONObject)jsonSent.get("values")).remove(config.get("increment.column"));
             }
+            returnArray.add(jsonSent);
             restCaller.setBody(jsonSent.toString());
             try {
                 restCaller.addParametersToRequest();
@@ -76,7 +79,7 @@ public class RestConnector implements IRestAction {
             } catch (URISyntaxException e) {
                 e.printStackTrace();
             }
-
         }
+        return returnArray;
     }
 }
