@@ -5,16 +5,16 @@ import org.apache.log4j.Logger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import static jdbc.automic.configuration.ConfigLoader.config;
 
 public class MainQueryThread extends Thread{
-	private Logger logger = Logger.getLogger(MainQueryThread.class);
+	private final Logger logger = Logger.getLogger(MainQueryThread.class);
 	private final DBConnector dbconnector;
 	private final List<CharlesQueryThread> subThreads;
-	private boolean killFlag = false;
 
 	/**
-	 * <P>Initalizes the Worker Thread Pool</P>
+	 * <P>Initializes the Worker Thread Pool</P>
 	 * @param dbconnector DbConnector instance is needed
 	 */
 	public MainQueryThread(DBConnector dbconnector) {
@@ -32,7 +32,8 @@ public class MainQueryThread extends Thread{
 	 */
 	@Override
 	public void run() {
-		while(!killFlag) {
+		//sry
+		for(;;) {
 			startThread();
 			try {
 				System.gc();
@@ -42,19 +43,6 @@ public class MainQueryThread extends Thread{
 				logger.trace("", e);
 			}
 		}
-	}
-
-	/**
-	 * <P>Kills the MainQueryThread</P>
-	 */
-	private void killThread() {
-		this.killFlag = true;
-		try {
-			this.join();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		logger.debug("Shutting down Thread: "+ this.getName());
 	}
 
 	/**
@@ -75,11 +63,11 @@ public class MainQueryThread extends Thread{
 	}
 
 	/**
-	 * <P>Initalizes the Thread Pool with a given pool size</P>
+	 * <P>Initializes the Thread Pool with a given pool size</P>
 	 * @param number Number of threads in the thread Pool
 	 */
 	private void initThreadPool(int number) {
-		logger.debug("Initalizing Thread Pool");
+		logger.debug("Initializing Thread Pool");
 		for(int i = 0; i<number; i++) {
 			subThreads.add(new CharlesQueryThread("SubThread #"+i, dbconnector));
 		}

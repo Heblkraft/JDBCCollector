@@ -40,15 +40,7 @@ public final class ConfigLoader implements ConfigModel {
      */
     public static void load(String baseConfigFile, String restConfigFile){
 
-        if(!Files.exists(Paths.get(baseConfigFile))){
-            logger.error(String.format("Can not find or load %s", baseConfigFile));
-            System.exit(-1);
-        }
-
-        if(!Files.exists(Paths.get(restConfigFile))){
-            logger.error(String.format("Can not find or load %s", restConfigFile));
-            System.exit(-1);
-        }
+        assertFilesExist(baseConfigFile, restConfigFile);
 
         config.putAll(readConfigurationFile(baseConfigFile));
         config.putAll(readConfigurationFile(restConfigFile));
@@ -60,6 +52,19 @@ public final class ConfigLoader implements ConfigModel {
         }
     }
 
+    /**
+     * Checks whether or not the specified files exist.
+     * Note that the parameter is a Vararg
+     * @param paths The paths to the wanted files
+     */
+    private static void assertFilesExist(String ...paths){
+        for(String path : paths){
+            if(!Files.exists(Paths.get(path))){
+                logger.error(String.format("Can not find or load %s", path));
+                System.exit(-1);
+            }
+        }
+    }
 
     /**
      * This method determines whether program gets further executed or not.
@@ -72,11 +77,9 @@ public final class ConfigLoader implements ConfigModel {
      * @return True if the loaded configuration is valid or false otherwise.
      */
     private static boolean assertConfigurationStatus(){
-
         ArrayList<String> errors = new ArrayList<>();
 
         for(String requiredField : requiredFieldModels){
-
             String[] pair = requiredField.split("\\|");
 
             if(config.get(pair[0]) == null){
@@ -118,15 +121,12 @@ public final class ConfigLoader implements ConfigModel {
      */
 
     private static HashMap<String, String> readConfigurationFile(String path) {
-
         HashMap<String, String> configLines = new HashMap<>();
 
         try(BufferedReader br = new BufferedReader(new FileReader(path))){
-
             String line;
 
             while((line = br.readLine()) != null){
-
                 if(line.isEmpty()) continue;
                 if(!line.contains("=")) continue;
 
@@ -139,25 +139,18 @@ public final class ConfigLoader implements ConfigModel {
 
                 if(value.contains(".sql")) {
                     BufferedReader sqlBr = new BufferedReader(new FileReader(value));
-
                     String sqlLine;
-
                     StringBuilder sql = new StringBuilder();
 
                     while((sqlLine = sqlBr.readLine()) != null) sql.append(sqlLine);
-
                     value = sql.toString();
-
                     sqlBr.close();
                 }
-
                 configLines.put(key, value);
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return configLines;
     }
 }

@@ -16,15 +16,12 @@ import java.util.TimeZone;
 import static jdbc.automic.configuration.ConfigLoader.config;
 
 public class RestConnector implements IRestAction {
-    //Finished
-    private Logger logger = Logger.getLogger(RestConnector.class);
-
+    private final Logger logger = Logger.getLogger(RestConnector.class);
     private final RestCaller restCaller = new RestCaller(config.get("rest.url"), Method.POST);
 
     /**
      * Initializes the {@link RestCaller}
      */
-    //Initializes the RestCaller
     public RestConnector() {
         try {
             restCaller.addHeader("Authorization", config.get("rest.authorization"));
@@ -50,20 +47,23 @@ public class RestConnector implements IRestAction {
      * <P>this Method gets called by {@link DBConnector}</P>
      * @param array Changed Data
      */
-    //Implementations of the IRestAction witch gets called by DbConnector;
     @Override
     public JSONArray action(JSONArray array) {
         JSONArray returnArray = new JSONArray();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 
         for (Object obj : array) {
             JSONObject jsonSent = new JSONObject();
             jsonSent.put("values", obj);
             jsonSent.put("eventtype", config.get("rest.eventtype"));
             if(config.get("increment.mode").equals("timestamp")){
-                Timestamp timestamp = Timestamp.valueOf(((JSONObject)obj).get(config.get("increment.column")).toString());
-                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S");
-                dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+                Object incrementValue = ((JSONObject) obj).get(config.get("increment.column"));
+                Timestamp timestamp = Timestamp.valueOf(incrementValue.toString());
+
                 jsonSent.put("eventtime", dateFormat.format(timestamp));
+
+                //Removes the timestamp value from the values
                 ((JSONObject)jsonSent.get("values")).remove(config.get("increment.column"));
             }
             returnArray.add(jsonSent);
@@ -72,13 +72,19 @@ public class RestConnector implements IRestAction {
                 restCaller.addParametersToRequest();
                 restCaller.execute();
                 logger.debug("RestCaller sent Request: "+ jsonSent.toString());
-                System.out.println(restCaller.getResponse());
+                if(restCaller.getResponseCode() == 200){
+                    logger.debug("Responsecode: "+ restCaller.getResponseCode());
+                }else {
+                    logger.error("Responsecode: "+ restCaller.getResponseCode());
+                }
                 restCaller.closeResponse();
             } catch (IOException e) {
                 logger.error("Cannot connect to Rest Service: "+ config.get("rest.url"));
                 logger.trace("", e);
+
             } catch (URISyntaxException e) {
-                e.printStackTrace();
+                logger.error("Cannot resolve URL: "+ config.get("rest.url"));
+                logger.trace("", e);
             }
         }
         return returnArray;

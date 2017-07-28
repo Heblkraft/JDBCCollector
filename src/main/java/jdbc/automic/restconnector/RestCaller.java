@@ -46,12 +46,12 @@ public class RestCaller {
 	private CredentialsProvider credentialsProvider;
 
 	/**
-	 * <P>Initalizes the RestCaller with the url and the method</P>
+	 * <P>Initializes the RestCaller with the url and the method</P>
 	 * @param url URL to the Rest Service
 	 * @param method {@link RestCaller.Method} Set the Method for the {@link org.apache.http.HttpRequest}
 	 */
 	public RestCaller(String url, Method method) {
-		httpclient = HttpClients.createDefault();
+		this.httpclient = HttpClients.createDefault();
 		this.url = url;
 		this.nameValueList = new ArrayList<>();
 		this.headerList = new ArrayList<>();
@@ -79,7 +79,6 @@ public class RestCaller {
 	 * @param key Header Key
 	 * @param value Header Value
 	 */
-	//Adding Header to HeaderList
 	public void addHeader(String key, String value) {
 		this.addHeader(new BasicHeader(key, value));
 	}
@@ -91,12 +90,10 @@ public class RestCaller {
 	public void addHeader(Header header) {
 		this.headerList.add(header);
 	}
-	//End Adding Header to HeaderList
 
 	/**
 	 * <P>Adds Basic Authentication to the {@link HttpRequestBase}</P>
 	 */
-	//Adding Authentication to CredentialProvider
 	public void setAuthentication(String username, String password) {
 		setAuthentication(new UsernamePasswordCredentials(username, password));
 	}
@@ -109,9 +106,6 @@ public class RestCaller {
 		this.credentialsProvider = new BasicCredentialsProvider();
 		this.credentialsProvider.setCredentials(AuthScope.ANY, credentials);
 	}
-	//End Adding Authentification to CredentialProvider
-	
-	//Adding Attributes to nameValueList
 
 	/**
 	 * Appends Key-Value-Pair to the body of the {@link HttpRequestBase}
@@ -129,7 +123,6 @@ public class RestCaller {
 	public void appendAttributes(NameValuePair nvp) {
 		nameValueList.add(nvp);
 	}
-	//End Adding Attributes to nameValueList
 
 
 	/**
@@ -137,7 +130,6 @@ public class RestCaller {
 	 * <P>Only call this if the Header or the Credentials have changed</P>
 	 * <P>Note: this Method already calls {@link RestCaller#addParametersToRequest()}</P>
 	 */
-	//if Authentification or header or Parameters changed you need to rebuild the client
 	public void build() throws UnsupportedEncodingException, URISyntaxException {
 		//Adding Credentials to HttpClient & Adding Headers to HttpClient
 		if(!headerList.isEmpty() || !(credentialsProvider == null)) {
@@ -168,7 +160,6 @@ public class RestCaller {
 	/**
 	 * Sets the Body for an Http Post Request
 	 */
-	//Sets Body for Post HttpRequest
 	public void setBody(String body) {
 		this.body = body;
 	}
@@ -177,18 +168,15 @@ public class RestCaller {
 	 * <P>Executes the built {@link HttpRequestBase}</P>
 	 * <P>To get the Response call {@link RestCaller#getResponse()}</P>
 	 */
-	//Executes the HttpRequest
 	public void execute() throws IOException {
-		if(httpcontext != null) response = httpclient.execute(httpRequestBase,httpcontext);
-		else response = httpclient.execute(httpRequestBase);
+		response = httpclient.execute(httpRequestBase);
 		logger.debug("Sending HttpRequest");
 	}
 
 	/**
-	 * Returns the {@link org.apache.http.HttpResponse} from the previous execute
+	 * Returns the {@link org.apache.http.HttpResponse} from the previous execution
 	 * @return {@link InputStream} of the returned Response
 	 */
-	//Returnes the Response from the previous Execution
 	public InputStream getResponse() throws UnsupportedOperationException, IOException {
 		return response.getEntity().getContent();
 	}
@@ -205,7 +193,6 @@ public class RestCaller {
 	/**
 	 * <P>After reading the Response you have to call this Method</P>
 	 */
-	//After reading the response you need the close it
 	public void closeResponse() {
 		try {
 			EntityUtils.consume(response.getEntity());
@@ -220,7 +207,6 @@ public class RestCaller {
 	/**
 	 * <P>After working with the RestCaller you need to close it</P>
 	 */
-	//if you finished working with the client you need to close the client
 	public void closeClient() {
 		try {
 			httpclient.close();

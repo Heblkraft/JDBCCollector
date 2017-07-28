@@ -16,7 +16,6 @@ public interface IRestAction {
 	 * <P>Gets called if there is a change in the Datasource</P>
 	 * <P>Gets implemented by {@link RestConnector}</P>
 	 * @param array Changed Data
-	 * @return Returns the JSONArray which the RestConnector sent to the Rest Endpoint
 	 */
 	JSONArray action(JSONArray array);
 
@@ -25,23 +24,24 @@ public interface IRestAction {
 	 * <P>One Row represents one {@link JSONObject} in the {@link JSONArray}</P>
 	 * @param resultSet that should get converted
 	 * @return {@link JSONArray} that represents the Resultset
-	 * @throws SQLException
+	 * @throws SQLException Problems that might occur during the processing of the Resultset.
 	 */
 	static JSONArray fetchData(ResultSet resultSet) throws SQLException {
 		JSONArray array = new JSONArray();
-		JSONObject tableEntry = null;
-		int j = 0;
-		while(resultSet.next() && j < Integer.parseInt(config.get("max.entries"))) {
+		JSONObject tableEntry;
+		int rowCount = 0;
+
+		while(resultSet.next() && rowCount++ < Integer.parseInt(config.get("max.entries"))) {
 			tableEntry = new JSONObject();
-			int i = 1;
-			while(i <= resultSet.getMetaData().getColumnCount()) {
-				tableEntry.put(resultSet.getMetaData().getColumnLabel(i), resultSet.getObject(i++));
+			int columnCount = 1;
+			while(columnCount <= resultSet.getMetaData().getColumnCount()) {
+				tableEntry.put(resultSet.getMetaData().getColumnLabel(columnCount), resultSet.getObject(columnCount++));
 			}
 			array.add(tableEntry);
-			j++;
 		}
 		resultSet.beforeFirst();
-		logger.debug("Fetching Resultset to JSONArray");
+
+		logger.debug("Fetching Resultset to JSONArray: ");
 		logger.debug(array);
 		return array;
 	}

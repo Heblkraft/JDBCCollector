@@ -59,21 +59,18 @@ public class DBConnector {
 	/**
 	 * <p>Creating idFile or timestampFile</p>
 	 */
-	private boolean initTempFiles(){
+	private void initTempFiles(){
 		try{
 			if(!new File(CURRENT_FILE).exists()){
 				Files.write(Paths.get(CURRENT_FILE), config.get("increment.mode").equals("timestamp") ? TIMESTAMP_START_VALUE.getBytes() : Integer.toString(ID_START_VALUE).getBytes());
 				logger.info(CURRENT_FILE+ " successfully created");
-				return true;
 			}else {
 				logger.info(CURRENT_FILE+" already exists");
-				return false;
 			}
 		} catch (IOException e){
 			logger.error("Can't create File: "+CURRENT_FILE);
 			logger.trace("",e);
 		}
-		return false;
 	}
 
 	 /**
@@ -100,28 +97,20 @@ public class DBConnector {
 	/**
 	 * Adds a prepared Statement to a SQL_Query and Executes it
 	 * @param query contains the sql-query command
-	 * @return a resultset is returned from the executed Query
+	 * @return a Resultset is returned from the executed Query
 	 */
 	ResultSet sendQuery(String query){
 		ResultSet resultset = null;
-		PreparedStatement ps = null;
 		try {
-			if(getConnection() != null) {
-				if (config.get("increment.mode").equals("id")) {
-					query += " WHERE " + config.get("increment.column") + " > ?";
-					ps = getConnection().prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-					ps.setInt(1, lastID);
-				} else if (config.get("increment.mode").equals("timestamp")) {
-					query += " WHERE " + config.get("increment.column") + " > ?";
-					ps = getConnection().prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-					ps.setTimestamp(1, lastTimestamp);
-				}
+			if(getConnection() != null){
+				query += " WHERE " + config.get("increment.column") + " > ?";
+				PreparedStatement ps = getConnection().prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+				ps.setObject(1, config.get("increment.mode").equals("id") ? lastID : lastTimestamp);
 				resultset = ps.executeQuery();
 			}
 		} catch (SQLException e) {
 			conn = null;
 		}
-
 		return resultset;
 	}
 
@@ -129,13 +118,13 @@ public class DBConnector {
 	 * Saves the lastID to the file .id
 	 * @param newID contains the latest ID
 	 */
-	void lastIDChanged (int newID) {
+	void lastAttributeChanged (int newID) {
 		if(lastID < newID) {
 			try {
 				logger.info("Id changed to: "+ newID);
 				lastID = newID;
 				String content = Integer.toString(lastID);
-				writeToFile(CURRENT_FILE, content);
+				writeToFile(content);
 			} catch (IOException e) {
 				logger.error("Can't write to file .id");
 				logger.trace("",e);
@@ -146,13 +135,12 @@ public class DBConnector {
 	 * Saves the lastTimestamp to the file .timestamp
 	 * @param newTimeStamp contains the latest Timestamp
 	 */
-	void lastTimestampChanged (Timestamp newTimeStamp) {
-
+	void lastAttributeChanged (Timestamp newTimeStamp) {
 		if(lastTimestamp.before(newTimeStamp)) {
 			try {
 				lastTimestamp = newTimeStamp;
 				logger.info("Timestamp changed to: "+ newTimeStamp);
-				writeToFile(CURRENT_FILE, lastTimestamp.toString());
+				writeToFile(lastTimestamp.toString());
 			} catch (IOException e) {
 				logger.error("Can't write to file .timestamp");
 				logger.trace("",e);
@@ -162,11 +150,10 @@ public class DBConnector {
 
 	/**
 	 * Writes to a File or Creates the File
-	 * @param filePath Path to the File to write to
 	 * @param content String to be written to the File
 	 */
-	private void writeToFile(String filePath, String content) throws IOException {
-		File file = new File(filePath);
+	private void writeToFile(String content) throws IOException {
+		File file = new File(CURRENT_FILE);
 		FileOutputStream fos = new FileOutputStream(file);
 
 		if (!file.exists() && file.createNewFile()){
@@ -176,7 +163,7 @@ public class DBConnector {
 		fos.write(content.getBytes());
 		fos.close();
 
-		logger.debug("Written to File " + filePath);
+		logger.debug("Written to File " + CURRENT_FILE);
 	}
 
 	RestConnector getRestConnector(){
