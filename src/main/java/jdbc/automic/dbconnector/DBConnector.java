@@ -66,7 +66,7 @@ public class DBConnector {
 				logger.info(CURRENT_FILE+ " successfully created");
 				return true;
 			}else {
-				logger.debug(CURRENT_FILE+" already exists");
+				logger.info(CURRENT_FILE+" already exists");
 				return false;
 			}
 		} catch (IOException e){
@@ -86,7 +86,7 @@ public class DBConnector {
 			if(conn == null) {
                 logger.debug("Building Connection to Database...");
 		    	conn = DriverManager.getConnection(config.get("dbconnection"));
-		    	logger.debug("Connected to " + conn.getMetaData().getDatabaseProductName());
+		    	logger.info("Connected to " + conn.getMetaData().getDatabaseProductName());
 	    	}
             return conn;
 		}catch (SQLException e) {
@@ -130,9 +130,9 @@ public class DBConnector {
 	 * @param newID contains the latest ID
 	 */
 	void lastIDChanged (int newID) {
-		logger.debug("Id changed to: "+ newID);
 		if(lastID < newID) {
 			try {
+				logger.info("Id changed to: "+ newID);
 				lastID = newID;
 				String content = Integer.toString(lastID);
 				writeToFile(CURRENT_FILE, content);
@@ -147,10 +147,11 @@ public class DBConnector {
 	 * @param newTimeStamp contains the latest Timestamp
 	 */
 	void lastTimestampChanged (Timestamp newTimeStamp) {
-		logger.debug("Timestamp changed to: "+ newTimeStamp);
+
 		if(lastTimestamp.before(newTimeStamp)) {
 			try {
 				lastTimestamp = newTimeStamp;
+				logger.info("Timestamp changed to: "+ newTimeStamp);
 				writeToFile(CURRENT_FILE, lastTimestamp.toString());
 			} catch (IOException e) {
 				logger.error("Can't write to file .timestamp");
@@ -175,7 +176,7 @@ public class DBConnector {
 		fos.write(content.getBytes());
 		fos.close();
 
-		logger.info("Written to File " + filePath);
+		logger.debug("Written to File " + filePath);
 	}
 
 	RestConnector getRestConnector(){

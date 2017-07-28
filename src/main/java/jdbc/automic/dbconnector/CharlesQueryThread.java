@@ -1,8 +1,5 @@
 package jdbc.automic.dbconnector;
 
-import static jdbc.automic.configuration.ConfigLoader.config;
-
-
 import jdbc.automic.restconnector.IRestAction;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
@@ -11,6 +8,8 @@ import org.json.simple.JSONObject;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+
+import static jdbc.automic.configuration.ConfigLoader.config;
 
 public class CharlesQueryThread extends Thread{
 	//Worker Thread for the MainQueryThread
@@ -39,7 +38,7 @@ public class CharlesQueryThread extends Thread{
 		if(isEmpty(rs)) dbConnector.lastIDChanged(0);
 		else {
 			try {
-				logger.debug("Change Detected");
+				logger.info("Change Detected");
 				JSONArray array = IRestAction.fetchData(rs);
 				//Next Statement gets last Item of the array and sends the increment item to the dbConnector
 				if(config.get("increment.mode").equals("id")) dbConnector.lastIDChanged(Integer.parseInt(((JSONObject)array.get(array.size()-1)).get(config.get("increment.column")).toString())); //Returns the last Id in the Query and gives it to the dbConnector

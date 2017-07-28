@@ -72,6 +72,7 @@ public class RestConnector implements IRestAction {
                 restCaller.addParametersToRequest();
                 restCaller.execute();
                 logger.debug("RestCaller sent Request: "+ jsonSent.toString());
+                System.out.println(restCaller.getResponse());
                 restCaller.closeResponse();
             } catch (IOException e) {
                 logger.error("Cannot connect to Rest Service: "+ config.get("rest.url"));

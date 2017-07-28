@@ -1,12 +1,5 @@
 package jdbc.automic.restconnector;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.http.Header;
 import org.apache.http.NameValuePair;
 import org.apache.http.auth.AuthScope;
@@ -29,6 +22,13 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RestCaller {
 	private final Logger logger = Logger.getLogger(RestCaller.class);
@@ -191,6 +191,15 @@ public class RestCaller {
 	//Returnes the Response from the previous Execution
 	public InputStream getResponse() throws UnsupportedOperationException, IOException {
 		return response.getEntity().getContent();
+	}
+
+
+	/**
+	 * Return the ResponseCode from the previous execution
+	 * @return Response code
+	 */
+	public int getResponseCode(){
+		return response.getStatusLine().getStatusCode();
 	}
 
 	/**
